@@ -47,6 +47,7 @@ public class MipcaActivityCapture extends Activity implements Callback
     private boolean playBeep;
     private static final float BEEP_VOLUME = 0.10f;
     private boolean vibrate;
+    private String mark;
 
     /** Called when the activity is first created. */
     @Override
@@ -56,7 +57,11 @@ public class MipcaActivityCapture extends Activity implements Callback
 	setContentView(R.layout.activity_capture);
 	CameraManager.init(getApplication());
 	viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
-
+	mark = "";
+	if (getIntent() != null)
+	{
+	    mark = getIntent().getSerializableExtra("Scan").toString();
+	}
 	Button mButtonBack = (Button) findViewById(R.id.button_back);
 	mButtonBack.setOnClickListener(new OnClickListener()
 	{
@@ -133,7 +138,14 @@ public class MipcaActivityCapture extends Activity implements Callback
 	String resultString = result.getText();
 	if (resultString.equals(""))
 	{
-	    Toast.makeText(MipcaActivityCapture.this, "Scan failed!", Toast.LENGTH_SHORT).show();
+	    if ("Scan".equals(mark))
+	    {
+		Toast.makeText(MipcaActivityCapture.this, "扫码失败，请尝试其它角度重新扫描或者手动输入钢瓶编码!", Toast.LENGTH_SHORT).show();
+	    }
+	    else
+	    {
+		Toast.makeText(MipcaActivityCapture.this, "扫码失败，请尝试其它角度重新扫描!", Toast.LENGTH_SHORT).show();
+	    }
 	}
 	else
 	{

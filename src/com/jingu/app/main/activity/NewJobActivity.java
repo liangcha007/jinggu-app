@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ public class NewJobActivity extends MyActivity
     TextView j_date;
     TextView j_content;
     TextView j_tel;
+    EditText rl_code;
     Spinner sp;
 
     @Override
@@ -36,6 +38,7 @@ public class NewJobActivity extends MyActivity
 	j_date = (TextView) findViewById(R.id.j_date);
 	j_content = (TextView) findViewById(R.id.j_content);
 	j_tel = (TextView) findViewById(R.id.j_tel);
+	rl_code = (EditText) findViewById(R.id.rl_code);
 
 	jBean = (JobBean) intent.getSerializableExtra("job");
 	// 初始化下拉列表
@@ -100,10 +103,32 @@ public class NewJobActivity extends MyActivity
 	jBean.setJobReply(replyStr);
 	Bundle data = new Bundle();
 	data.putSerializable("job", jBean);
+	if (!"".equals(rl_code.getText()) || rl_code.getText() != null)
+	{
+	    data.putString("result", rl_code.getText().toString());
+	}
+	else
+	{
+	    data.putString("result", "");
+	}
 	Intent intentWait = new Intent(NewJobActivity.this, WaitingActivity.class);
 	intentWait.putExtras(data);
 	intentWait.putExtra("str", "confirm");
 	startActivityForResult(intentWait, 0);
+    }
+
+    /**
+     * 扫描二维码提交工单
+     * 
+     * @param v
+     */
+    public void scanConfirm(View v)
+    {
+	Intent intent = new Intent();
+	intent.putExtra("Scan", "Scan");
+	intent.setClass(NewJobActivity.this, MipcaActivityCapture.class);
+	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	startActivityForResult(intent, 1);
     }
 
     @Override
@@ -145,6 +170,24 @@ public class NewJobActivity extends MyActivity
 		break;
 	    case 2:
 		// 正常返回
+		break;
+	    default:
+		break;
+	    }
+	}
+	else if (requestCode == 1)
+	{
+	    switch (resultCode)
+	    {
+	    case RESULT_OK:
+		String replyStr = sp.getSelectedItem().toString();
+		Bundle bundle = data.getExtras();
+		jBean.setJobReply(replyStr);
+		bundle.putSerializable("job", jBean);
+		Intent intentWait = new Intent(NewJobActivity.this, WaitingActivity.class);
+		intentWait.putExtras(bundle);
+		intentWait.putExtra("str", "confirm");
+		startActivityForResult(intentWait, 0);
 		break;
 	    default:
 		break;

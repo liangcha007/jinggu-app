@@ -153,7 +153,7 @@ public class HttpClientService
     /**
      * 处理工单，发送工单处理情况到服务器 成功：返回success 失败：返回faile或者失败信息
      */
-    public static boolean sendConfirmJob(Context context, JobBean jobBean)
+    public static boolean sendConfirmJob(Context context, JobBean jobBean, String result)
     {
 	DBJobInfoDao dInfoDao = new DBJobInfoDao(context);
 
@@ -162,10 +162,11 @@ public class HttpClientService
 	NameValuePair param3 = new BasicNameValuePair("act", BaseConst.CONFIRM_ACT);
 	NameValuePair param4 = new BasicNameValuePair("roll_number", jobBean.getJobId());
 	NameValuePair param5 = new BasicNameValuePair(BaseConst.CONFIRM_STR, jobBean.getJobReply());
+	NameValuePair param6 = new BasicNameValuePair("code", result);
 	try
 	{
-	    String return_josn = CustomerHttpClient.post(BaseConst.HTTP_URL, param1, param2, param3, param4, param5);
-	    Log.i(TAG, "returnStr is :" + return_josn);
+	    String return_josn = CustomerHttpClient.post(BaseConst.HTTP_URL, param1, param2, param3, param4, param5,
+		    param6);
 	    if (BaseConst.SUCCESS.equals(getState(return_josn)))
 	    {
 		// 如果提交成功了，那么更新工单到数据库中
