@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<update>
+    <version>1.1</version>
+    <name>jingu_app</name>
+    <url>http://crm.jingu.com/app/update/JinGu.apk</url>
+    <log>1.在线更新更新;\n 2.修复无网络状况下登录失败问题!\n</log>
+</update>

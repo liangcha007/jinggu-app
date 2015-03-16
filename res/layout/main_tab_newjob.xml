@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#fcfcfc"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/bottom_bar"
+        android:focusable="true"
+        android:gravity="center_vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/tab_msg_title"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/right_btn"
+            android:layout_width="67dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/title_btn_right"
+            android:onClick="ShowMenu"
+            android:src="@drawable/title_btn_function" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/net_work_msg"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/yellow"
+        android:clickable="true"
+        android:drawableLeft="@drawable/net_waring"
+        android:gravity="center_vertical"
+        android:onClick="SetNet"
+        android:paddingLeft="25dp"
+        android:text="  当前网络不可用,点击设置!!"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <com.jingu.app.ui.RefreshableView
+        android:id="@+id/refreshable_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <ListView
+            android:id="@+id/new_job_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="#00000000"
+            android:drawSelectorOnTop="false"
+            android:fadingEdge="none" >
+        </ListView>
+    </com.jingu.app.ui.RefreshableView>
+
+</LinearLayout>

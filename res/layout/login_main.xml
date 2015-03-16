@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zhy="http://schemas.android.com/apk/res/com.jingu.app"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        style="@color/antiquewhite"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:gravity="center|center_vertical"
+        android:orientation="vertical"
+        android:paddingBottom="5dp" >
+
+        <!-- 圆形图片 -->
+
+        <com.jingu.app.ui.CustomImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            zhy:borderRadius="10dp"
+            zhy:src="@drawable/logo2"
+            zhy:type="circle" />
+
+        <TextView
+            android:id="@+id/appsname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="南阳蓝天燃气综合业务终端"
+            android:textColor="@color/black"
+            android:paddingTop="10dp"
+            android:textSize="26sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip" />
+
+    <com.jingu.app.ui.ClearEditText
+        android:id="@+id/edit_user_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/snow"
+        android:drawableLeft="@drawable/login_user_pic"
+        android:drawablePadding="10dp"
+        android:drawableRight="@drawable/delete_selector"
+        android:hint="@string/give_username"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp"
+        android:textColorHint="@color/darkgrey"
+        android:textSize="@dimen/jingu_edit_text_size" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dip" />
+
+    <com.jingu.app.ui.ClearEditText
+        android:id="@+id/edit_pass_word"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/snow"
+        android:drawableLeft="@drawable/login_lock_pic"
+        android:drawablePadding="10dp"
+        android:drawableRight="@drawable/delete_selector"
+        android:hint="@string/give_password"
+        android:inputType="textPassword"
+        android:overScrollMode="never"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp"
+        android:textColorHint="@color/darkgrey"
+        android:textSize="@dimen/jingu_edit_text_size" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:orientation="vertical"
+        android:paddingBottom="35dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="22dp" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="9" >
+
+            <Button
+                android:id="@+id/button_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/login_button_corners"
+                android:enabled="false"
+                android:fitsSystemWindows="true"
+                android:minHeight="43dip"
+                android:onClick="LoginHandler"
+                android:text="@string/login_text"
+                android:textColor="@color/lightslategray"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center|center_vertical"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/id_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:text="南阳市蓝天燃气有限责任公司"
+                android:textColor="@color/darkgrey"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/company_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="技术支持 郑州金鼓通信技术有限公司"
+                android:textColor="@color/darkgrey"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
