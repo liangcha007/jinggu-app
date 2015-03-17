@@ -9,11 +9,11 @@ import java.util.List;
 public class AddFormBean implements Serializable
 {
     private static final long serialVersionUID = 1L;
-    public String state;
-    public String des;
-    public String compand_id;
-    public String type;
-    public List<ItemBean> itemList;
+    public String state;//状态，success  failed
+    public String des;//原因，失败原因
+    public String compand_id;//工单的ID
+    public String type;//类型，新增工单，newjob
+    public List<ItemBean> itemList;//存储
     public AttrBean aBean; // 菜单和规则
     public List<ParamBean> listParamBeans;// 二级菜单的id和名称
 

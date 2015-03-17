@@ -3,6 +3,10 @@ package com.jingu.app.bean;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * @author zhouc52
+ * 
+ */
 public class ItemBean implements Serializable
 {
     private static final long serialVersionUID = 1L;

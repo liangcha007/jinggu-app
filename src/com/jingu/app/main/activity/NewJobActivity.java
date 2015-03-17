@@ -3,7 +3,9 @@ package com.jingu.app.main.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,6 +42,11 @@ public class NewJobActivity extends MyActivity
 	j_tel = (TextView) findViewById(R.id.j_tel);
 	rl_code = (EditText) findViewById(R.id.rl_code);
 
+	// 默认不显示键盘
+	getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+	// 只能输入数字
+	rl_code.setInputType(InputType.TYPE_CLASS_NUMBER);
+	rl_code.clearFocus();
 	jBean = (JobBean) intent.getSerializableExtra("job");
 	// 初始化下拉列表
 	sp = (Spinner) findViewById(R.id.j_reply);
@@ -127,7 +134,6 @@ public class NewJobActivity extends MyActivity
 	Intent intent = new Intent();
 	intent.putExtra("Scan", "Scan");
 	intent.setClass(NewJobActivity.this, MipcaActivityCapture.class);
-	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	startActivityForResult(intent, 1);
     }
 
@@ -181,11 +187,13 @@ public class NewJobActivity extends MyActivity
 	    {
 	    case RESULT_OK:
 		String replyStr = sp.getSelectedItem().toString();
-		Bundle bundle = data.getExtras();
 		jBean.setJobReply(replyStr);
-		bundle.putSerializable("job", jBean);
+		String result = data.getExtras().getString("result");
+		Bundle bundle2 = new Bundle();
+		bundle2.putSerializable("job", jBean);
+		bundle2.putString("result", result);
 		Intent intentWait = new Intent(NewJobActivity.this, WaitingActivity.class);
-		intentWait.putExtras(bundle);
+		intentWait.putExtras(bundle2);
 		intentWait.putExtra("str", "confirm");
 		startActivityForResult(intentWait, 0);
 		break;

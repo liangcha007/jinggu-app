@@ -60,7 +60,10 @@ public class MipcaActivityCapture extends Activity implements Callback
 	mark = "";
 	if (getIntent() != null)
 	{
-	    mark = getIntent().getSerializableExtra("Scan").toString();
+	    if (getIntent().getSerializableExtra("Scan")!=null && !"".equals(getIntent().getSerializableExtra("Scan")))
+	    {
+		mark=getIntent().getSerializableExtra("Scan").toString();
+	    }
 	}
 	Button mButtonBack = (Button) findViewById(R.id.button_back);
 	mButtonBack.setOnClickListener(new OnClickListener()

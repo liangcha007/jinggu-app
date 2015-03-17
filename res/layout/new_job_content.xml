@@ -29,62 +29,62 @@
             android:text="@string/job_view"
             android:textColor="#ffffff"
             android:textSize="20sp" />
+        
+         <Button
+             android:id="@+id/btn_scan_send"
+             android:layout_width="90dp"
+             android:layout_height="wrap_content"
+             android:layout_alignParentRight="true"
+             android:background="@drawable/title_btn_right"
+             android:onClick="scanConfirm"
+             android:text="@string/scan_commit_job"
+             android:textColor="#fff"
+             android:textSize="14sp" />
+
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/rl_bottom"
         android:layout_width="fill_parent"
-        android:layout_height="90dp"
+        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
         android:layout_below="@id/rl_body"
+        android:orientation="horizontal"
+        android:paddingTop="3dp"
+        android:focusable="true" 
+        android:focusableInTouchMode="true"
         android:background="@drawable/chat_footer_bg" >
 
         <TextView
             android:id="@+id/rl_text"
             android:layout_width="wrap_content"
-            android:layout_height="45dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="5dp"
             android:gravity="center_vertical"
-            android:text="@string/input_commit_job"
+            android:text="钢瓶编号: "
             android:textColor="#ffffff" />
 
         <EditText
             android:id="@+id/rl_code"
-            android:layout_width="fill_parent"
-            android:layout_height="45dp"
-            android:layout_marginTop="3dp"
-            android:layout_toRightOf="@id/rl_text" />
-
+            android:layout_width="0dp"
+            android:layout_weight="8"
+            android:layout_height="40dp" />
         <Spinner
             android:id="@+id/j_reply"
-            android:layout_width="170dp"
-            android:layout_height="45dp"
-            android:layout_below="@id/rl_text" />
-
-        <Button
-            android:id="@+id/btn_scan_send"
-            android:layout_width="95dp"
+            android:layout_width="0dp"
+            android:layout_weight="8"
             android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/j_reply"
-            android:background="@anim/btn_style_alert_dialog_cancel"
-            android:onClick="scanConfirm"
-            android:text="@string/scan_commit_job"
-            android:textColor="#ffffff" />
-
+            android:layout_below="@id/rl_text" />
         <Button
             android:id="@+id/btn_send"
-            android:layout_width="64dp"
+            android:layout_width="0dp"
+            android:layout_weight="5"
             android:layout_height="40dp"
-            android:layout_alignBaseline="@+id/btn_scan_send"
-            android:layout_alignBottom="@+id/btn_scan_send"
-            android:layout_toRightOf="@+id/j_reply"
             android:background="@anim/btn_style_alert_dialog_cancel"
             android:onClick="confirmPost"
             android:text="@string/commit_job"
             android:textColor="#ffffff" />
-
-    </RelativeLayout>
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="fill_parent"

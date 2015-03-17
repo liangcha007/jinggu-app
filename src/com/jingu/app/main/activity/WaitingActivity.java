@@ -176,8 +176,8 @@ public class WaitingActivity extends Activity
 		    return;
 		}
 		// 下面提交处理工单的操作
-		JobBean jBean = (JobBean) intent.getSerializableExtra("job");
 		Bundle bundle = intent.getExtras();
+		JobBean jBean = (JobBean) bundle.getSerializable("job");
 		String jsString = bundle.getString("result");
 		if (HttpClientService.sendConfirmJob(WaitingActivity.this, jBean, jsString))
 		{
