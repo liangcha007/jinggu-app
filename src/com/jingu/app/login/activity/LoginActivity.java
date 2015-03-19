@@ -128,7 +128,7 @@ public class LoginActivity extends Activity
 		// 访问失败
 		Toast.makeText(this, R.string.login_faile_address, Toast.LENGTH_SHORT).show();
 		break;
-	    default:
+	    case 3:
 		// 登录失败
 		Bundle bundle2 = data.getExtras();
 		String des = bundle2.getSerializable("des").toString();
@@ -140,6 +140,8 @@ public class LoginActivity extends Activity
 		{
 		    Toast.makeText(this, R.string.login_fail, Toast.LENGTH_SHORT).show();
 		}
+		break;
+	    default:
 		break;
 	    }
 	}

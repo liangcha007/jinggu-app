@@ -24,6 +24,7 @@ public class LoginingActivity extends Activity
     private LoginThread loginThread = null;
     private Intent intent = null;
     private Message msg = null;
+    public Boolean isRun;;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -33,6 +34,8 @@ public class LoginingActivity extends Activity
 
 	intent = getIntent();
 	msg = new Message();
+
+	isRun = true;
 
 	dbManager = new DBUserInfoDao(this);
 	if (loginHandler == null)
@@ -49,7 +52,7 @@ public class LoginingActivity extends Activity
     @Override
     public void onBackPressed()
     {
-	dbManager.closeDB();
+	isRun = false;
 	msg.what = 3;
 	loginHandler.sendMessage(msg);
 	super.onBackPressed();
@@ -79,7 +82,7 @@ public class LoginingActivity extends Activity
 		LoginingActivity.this.setResult(3, intent);
 		LoginingActivity.this.finish();
 	    case 4:
-		//访问失败，网络可用，但是访问失败
+		// 访问失败，网络可用，但是访问失败
 		LoginingActivity.this.setResult(4);
 		LoginingActivity.this.finish();
 	    default:
@@ -114,6 +117,7 @@ public class LoginingActivity extends Activity
 		    // conntect_error
 		    dbManager.closeDB();
 		    msg.what = 0;
+		    if (!isRun) { return; }
 		    loginHandler.sendMessage(msg);
 		}
 		else
@@ -140,6 +144,7 @@ public class LoginingActivity extends Activity
 			dbManager.closeDB();
 			// 登录成功
 			msg.what = 1;
+			if (!isRun) { return; }
 			loginHandler.sendMessage(msg);
 		    }
 		    else
@@ -154,6 +159,7 @@ public class LoginingActivity extends Activity
 			}
 			dbManager.closeDB();
 			msg.what = 2;
+			if (!isRun) { return; }
 			loginHandler.sendMessage(msg);
 		    }
 		}
@@ -163,6 +169,7 @@ public class LoginingActivity extends Activity
 		dbManager.closeDB();
 		e.printStackTrace();
 		msg.what = 4;
+		if (!isRun) { return; }
 		loginHandler.sendMessage(msg);
 	    }
 	}
