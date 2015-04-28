@@ -288,17 +288,18 @@ public class HttpClientService
      * @param telNum
      * @return
      */
-    public static AddFormBean getRepostOfAddJobInfo(String telNum)
+    public static AddFormBean getRepostOfAddJobInfo(String telNum, String addrStr)
     {
 	NameValuePair param1 = new BasicNameValuePair("username", BaseConst.username);
 	NameValuePair param2 = new BasicNameValuePair("password", BaseConst.password);
 	NameValuePair param3 = new BasicNameValuePair("act", BaseConst.ADD_JOB_ACT);
 	NameValuePair param4 = new BasicNameValuePair("customer_tel", telNum);
+	NameValuePair param5 = new BasicNameValuePair("customer_addr", addrStr);
 	try
 	{
 	    // String
 	    // josnStr="{\"state\":\"success\",\"type\":\"userandjob\",\"company_id\":\"\",\"des\":\"\",\"paras\":[{\"fd_name\":\"user_name\",\"type\":\"1\",\"name\":\"姓名\",\"value\":\"\",\"choice_yesno\":\"2\"},{\"fd_name\":\"user_tel\",\"type\":\"1\",\"name\":\"电话\",\"value\":\"\",\"choice_yesno\":\"2\"},{\"fd_name\":\"user_address\",\"type\":\"1\",\"name\":\"地址\",\"value\":\"\",\"choice_yesno\":\"1\"},{\"fd_name\":\"job_title\",\"type\":\"1\",\"name\":\"工单标题\",\"value\":\"\",\"choice_yesno\":\"2\"},{\"fd_name\":\"job_content\",\"type\":\"1\",\"name\":\"工单内容\",\"value\":\"\",\"choice_yesno\":\"2\"}],\"service_items\":[{\"fd_name\":\"1\",\"name\":\"租瓶\",\"value\":[{\"fd_name\":\"11\",\"name\":\"租用蓝天瓶\"},{\"fd_name\":\"12\",\"name\":\"租用其他瓶\"}]},{\"fd_name\":\"2\",\"name\":\"售瓶\",\"value\":[{\"fd_name\":\"21\",\"name\":\"出售蓝天瓶\"},{\"fd_name\":\"22\",\"name\":\"售出蓝天瓶\"}]}],\"service_contents\":[{\"fd_name\":\"3\",\"name\":\"5KG\"},{\"fd_name\":\"4\",\"name\":\"15KG\"},{\"fd_name\":\"5\",\"name\":\"45KG\"}]}";
-	    String josnStr = CustomerHttpClient.post(BaseConst.HTTP_URL, param1, param2, param3, param4);
+	    String josnStr = CustomerHttpClient.post(BaseConst.HTTP_URL, param1, param2, param3, param4, param5);
 	    Log.i(TAG, josnStr);
 	    AddFormBean aFormBean = AnalyistJosnService.getAddJobInfo(josnStr);
 	    return aFormBean;
@@ -316,7 +317,7 @@ public class HttpClientService
      * @param list
      * @return
      */
-    public static boolean postAddJobInfo(List<ParamBean> list)
+    public static boolean postAddJobInfo(List<ParamBean> list, String flag)
     {
 	List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 	NameValuePair param1 = new BasicNameValuePair("username", BaseConst.username);
@@ -325,6 +326,8 @@ public class HttpClientService
 	formparams.add(param2);
 	NameValuePair param3 = new BasicNameValuePair("act", BaseConst.ADD_JOB_CONFIRM_ACT);
 	formparams.add(param3);
+	NameValuePair param4 = new BasicNameValuePair("flag", flag);
+	formparams.add(param4);
 	for (int i = 0; i < list.size(); i++)
 	{
 	    ParamBean pBean = list.get(i);

@@ -293,10 +293,12 @@
                 android:paddingTop="20dp" >
 
                 <Button
+                    android:id="@+id/button_sumbit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/login_button_corners"
                     android:fitsSystemWindows="true"
+                    android:focusable="true"
                     android:minHeight="43dip"
                     android:onClick="postHandler"
                     android:text="@string/confirm_add_customer"

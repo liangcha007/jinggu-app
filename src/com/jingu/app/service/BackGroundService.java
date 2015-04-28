@@ -9,8 +9,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.IBinder;
 import android.os.Message;
+import android.provider.MediaStore.Audio;
 import android.util.Log;
 
 import com.jingu.app.R;
@@ -38,6 +40,7 @@ public class BackGroundService extends Service
     // 位置服务
     private LocationManager locationManager = null;
     private LocationListener locationListener = null;
+    public Long sleepTime;// 系统扫描时间
 
     @Override
     public IBinder onBind(Intent intent)
@@ -57,10 +60,16 @@ public class BackGroundService extends Service
 	CharSequence tickerText = msgTitile;
 	long when = System.currentTimeMillis();
 	messageNotification = new Notification(icon, tickerText, when);
-	// 指定个性化视图
+	// 指定个性化视图,设置提示音、震动
 	messageNotification.contentView = null;
-	messageNotification.defaults = Notification.DEFAULT_ALL;
-	messageNotification.flags = Notification.FLAG_AUTO_CANCEL;// 点击消息后,该消息自动退出
+	// --
+	messageNotification.sound = Uri.withAppendedPath(Audio.Media.INTERNAL_CONTENT_URI, "2");// 系统内部的提示音
+	messageNotification.defaults |= Notification.DEFAULT_VIBRATE; // 震动
+	messageNotification.defaults |= Notification.DEFAULT_LIGHTS; // 默认灯光提示
+	messageNotification.flags |= Notification.FLAG_INSISTENT; // 一直震动响铃，直到用户响应
+	// --
+	//--> messageNotification.defaults = Notification.DEFAULT_ALL;
+	messageNotification.flags |= Notification.FLAG_AUTO_CANCEL;// 点击消息后,该消息自动退出
 
 	messageNotificatioManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 	if (messageIntent == null)
@@ -68,7 +77,10 @@ public class BackGroundService extends Service
 	    messageIntent = new Intent(this, MainActivityFrag.class);
 	}
 	messagePendingIntent = PendingIntent.getActivity(this, 0, messageIntent, 0);
-
+	// 读取系统扫描参数
+	String setScan = BaseConst.getParams(this, BaseConst.SCAN_TIMES);
+	sleepTime = Long.valueOf(setScan) * 1000;
+	Log.i(TAG, setScan);
 	// 开启线程
 	if (messageThread == null)
 	{
@@ -165,7 +177,7 @@ public class BackGroundService extends Service
 			Log.i(TAG, textMsg);
 		    }
 		    // 休息10秒钟
-		    Thread.sleep(10000);
+		    Thread.sleep(sleepTime);
 		}
 		catch (InterruptedException e)
 		{
@@ -176,6 +188,7 @@ public class BackGroundService extends Service
 	}
     }
 
+    @SuppressWarnings("static-access")
     @Override
     public void onDestroy()
     {
@@ -198,6 +211,7 @@ public class BackGroundService extends Service
 	    CustomerHttpClient.mHttpClient.getConnectionManager().shutdown();
 	    CustomerHttpClient.mHttpClient = null;
 	}
+	MainActivityFrag.instance.serviceIntent = null;
 	super.onDestroy();
 	Log.i(TAG, "destroy");
     }

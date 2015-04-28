@@ -257,8 +257,9 @@ public class WaitingActivity extends Activity
 		    return;
 		}
 		String telNum = intent.getStringExtra("telNum");
+		String addrStr = intent.getStringExtra("addrStr");
 		// 下面提交新增工单请求
-		AddFormBean aBean = HttpClientService.getRepostOfAddJobInfo(telNum);
+		AddFormBean aBean = HttpClientService.getRepostOfAddJobInfo(telNum, addrStr);
 		if (aBean != null)
 		{
 		    // 获取新增工单信息成功
@@ -286,7 +287,8 @@ public class WaitingActivity extends Activity
 		}
 		@SuppressWarnings("unchecked")
 		List<ParamBean> pList = (List<ParamBean>) intent.getSerializableExtra("job");
-		if (HttpClientService.postAddJobInfo(pList))
+		String flag = intent.getStringExtra("flag");
+		if (HttpClientService.postAddJobInfo(pList,flag))
 		{
 		    // 提交成功
 		    msg.what = 8;

@@ -24,6 +24,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             layout="@layout/activity_title" />
+
+     
+
+        <include
+            android:id="@+id/include2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            layout="@layout/activity_bottom" />
     </RelativeLayout>
 
 </FrameLayout>

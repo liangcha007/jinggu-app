@@ -94,10 +94,43 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/add_footer"
+        android:id="@+id/rl_body1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_body"
+        android:gravity="center"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:id="@+id/addr_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/addr_content"
+            android:layout_alignTop="@+id/addr_content"
+            android:gravity="center_vertical"
+            android:text="地址："
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/addr_content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/addr_title"
+            android:enabled="false"
+            android:hint="功能暂未开放!"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/add_footer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_body1"
         android:gravity="center"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"

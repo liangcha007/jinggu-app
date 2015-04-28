@@ -155,15 +155,8 @@ public final class CameraManager
 	    }
 	    configManager.setDesiredCameraParameters(camera);
 
-	    // FIXME
-	    // SharedPreferences prefs =
-	    // PreferenceManager.getDefaultSharedPreferences(context);
-	    // �Ƿ�ʹ��ǰ��
-	    // if (prefs.getBoolean(PreferencesActivity.KEY_FRONT_LIGHT, false))
-	    // {
 	    // FlashlightManager.enableFlashlight();
-	    // }
-	    FlashlightManager.enableFlashlight();
+
 	}
     }
 
@@ -384,4 +377,26 @@ public final class CameraManager
 	return context;
     }
 
+    /**
+     * set the flash light
+     * 
+     * @param v
+     */
+    public void setFlashlight(boolean v)
+    {
+	if (v)
+	{
+	    // open flashlight
+	    Camera.Parameters parameters = camera.getParameters();               
+	    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);    
+	    camera.setParameters(parameters);
+	}
+	else
+	{
+	    // close flashlight
+	    Camera.Parameters parameters = camera.getParameters();               
+	    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);    
+	    camera.setParameters(parameters);
+	}
+    }
 }

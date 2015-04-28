@@ -44,6 +44,7 @@ public class SysSettingActivity extends MyActivity
 	{
 	    set_jobNum.setText(jobNum);
 	}
+	// 初始化扫描参数
 	String setScan = BaseConst.getParams(this, BaseConst.SCAN_TIMES);
 	if ("".equals(setScan) || setScan == "" || setScan == null)
 	{
@@ -53,7 +54,7 @@ public class SysSettingActivity extends MyActivity
 	{
 	    set_scan.setText(setScan);
 	}
-
+	// 初始化是否自动更新参数
 	String setUpdate = BaseConst.getParams(this, BaseConst.UPDATE_PARAM);
 	if ("".equals(setScan) || setScan == "" || setScan == null)
 	{
@@ -70,7 +71,6 @@ public class SysSettingActivity extends MyActivity
 		uSpinner.setSelection(1, true);
 	    }
 	}
-	set_scan.setEnabled(false);
     }
 
     /**
@@ -83,6 +83,12 @@ public class SysSettingActivity extends MyActivity
 
     public void confirmHandler(View v)
     {
+	// 校验
+	if (set_jobNum.getText() == null || set_scan.getText() == null)
+	{
+	    Toast.makeText(this, getResources().getString(R.string.sys_set_msg), Toast.LENGTH_LONG).show();
+	    return;
+	}
 	// 设置工单保存个数
 	BaseConst.setParams(this, BaseConst.JOB_NUMS, set_jobNum.getText().toString());
 	int jNums = Integer.parseInt(set_jobNum.getText().toString());
@@ -90,11 +96,19 @@ public class SysSettingActivity extends MyActivity
 	// 直接清除掉那些多余的数据，按照时间先后清除
 	djDao.delRecord(jNums);
 	djDao.closeDB();
-	// 系统刷新时间(暂时不用)
-	BaseConst.setParams(this, BaseConst.SCAN_TIMES, set_scan.getText().toString());
-	// 设置是否自动更新(暂时没实现)
+	// 设置是否自动更新
 	BaseConst.setParams(this, BaseConst.UPDATE_PARAM, String.valueOf(uSpinner.getSelectedItemId()));
-	Toast.makeText(this, getResources().getString(R.string.sys_set_mark), Toast.LENGTH_SHORT).show();
+	// 系统刷新时间
+	String setScan = BaseConst.getParams(this, BaseConst.SCAN_TIMES);
+	if (setScan != null && !setScan.equals(set_scan.getText().toString()))
+	{
+	    BaseConst.setParams(this, BaseConst.SCAN_TIMES, set_scan.getText().toString());
+	    Toast.makeText(this, getResources().getString(R.string.sys_set_rload), Toast.LENGTH_LONG).show();
+	}
+	else
+	{
+	    Toast.makeText(this, getResources().getString(R.string.sys_set_mark), Toast.LENGTH_SHORT).show();
+	}
 	SysSettingActivity.this.finish();
     }
 }

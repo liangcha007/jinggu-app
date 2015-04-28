@@ -127,9 +127,13 @@ public class MainActivityFrag extends FragmentActivity
 
 	// 开启服务
 	updateIsBack(0);
-	serviceIntent = new Intent(getApplicationContext(), BackGroundService.class);
-	startService(serviceIntent);
-	Log.i(TAG, "now start a new service");
+	if (serviceIntent == null)
+	{
+	    serviceIntent = new Intent(getApplicationContext(), BackGroundService.class);
+	    startService(serviceIntent);
+	    Log.i(TAG, "now start a new service");
+	}
+
 	// 自动检测是否需要更新
 	if ("0".equals(BaseConst.getParams(instance, BaseConst.UPDATE_PARAM)))
 	{

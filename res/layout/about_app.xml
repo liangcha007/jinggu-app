@@ -59,9 +59,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/logo_pic"
             android:gravity="center"
+            android:paddingTop="20dp"
             android:text="程序版本:v2.0.4"
             android:textColor="@color/black"
-            android:paddingTop="20dp"
             android:textSize="14sp" />
     </RelativeLayout>
 
@@ -82,6 +82,15 @@
             android:text="技术支持:郑州金鼓通信技术有限公司"
             android:textColor="@color/black"
             android:textSize="16sp" />
+
+        <!-- <TextView -->
+        <!-- android:layout_width="fill_parent" -->
+        <!-- android:layout_height="fill_parent" -->
+        <!-- android:gravity="center|bottom" -->
+        <!-- android:paddingBottom="45dp" -->
+        <!-- android:text="技术支持:河南软信科技有限公司" -->
+        <!-- android:textColor="@color/black" -->
+        <!-- android:textSize="16sp" /> -->
     </LinearLayout>
 
 </RelativeLayout>

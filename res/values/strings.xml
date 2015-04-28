@@ -1,8 +1,13 @@
 <resources>
 
     <string name="app_name">蓝天燃气</string>
+    <string name="app_name_s">燃气终端</string>
     <string name="login_text">登录</string>
     <string name="confirm_add_customer">提交</string>
+    
+     <string name="confir_paidan">派单</string>
+     <string name="confir_zhiban">直办</string>
+     
     <string name="give_username">请填写登录帐号</string>
     <string name="give_password">请输入密码</string>
     <string name="logining">登录服务器...</string>
@@ -59,7 +64,10 @@
     <string name="sys_set_confirm">点击保存所有修改</string>
     <string name="sys_set_scan">更新参数(秒):</string>
     <string name="sys_set_update">是否自动更新:</string>
-    <string name="sys_set_mark">系统设置以保存并生效!</string>
+    <string name="sys_set_mark">系统设置已保存!</string>
+    <string name="sys_set_msg">请确认输入项是否都已经输入!</string>
+    <string name="sys_set_rload">系统重要参数已修改，下次登录生效!</string>
+    
     <string name="sys_clean_job_list">已办件已经清理!</string>
     <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
     <string name="scan_fail">获取二维码信息失败，可能失误网络原因</string>

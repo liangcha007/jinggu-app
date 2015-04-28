@@ -34,11 +34,12 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="15dp"
-                android:background="@anim/btn_style_alert_dialog_special"
+                android:background="@anim/btn_style_alert_dialog_cancel"
                 android:gravity="center"
                 android:onClick="addCustom"
                 android:text="新增用户"
                 android:textColor="#fff"
+                android:visibility="gone"
                 android:textSize="18sp" />
 
             <Button
@@ -49,7 +50,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="15dp"
-                android:background="@anim/btn_style_alert_dialog_cancel"
+                android:background="@anim/btn_style_alert_dialog_special"
                 android:gravity="center"
                 android:onClick="addNewJob"
                 android:text="新增工单"

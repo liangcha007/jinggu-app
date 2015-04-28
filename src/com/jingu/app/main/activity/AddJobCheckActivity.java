@@ -14,6 +14,7 @@ public class AddJobCheckActivity extends MyActivity
 {
     public static AddJobCheckActivity acActivity = null;
     EditText etel = null;
+    EditText addr = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -23,6 +24,8 @@ public class AddJobCheckActivity extends MyActivity
 	acActivity = this;
 	etel = (EditText) findViewById(R.id.tel_num);
 	etel.setInputType(InputType.TYPE_CLASS_NUMBER);
+	
+	addr = (EditText)findViewById(R.id.addr_content);
     }
 
     /**
@@ -76,7 +79,8 @@ public class AddJobCheckActivity extends MyActivity
     {
 
 	String telNum = etel.getText().toString();
-	if ("".equals(telNum) || telNum == null)
+	String addrStr = addr.getText().toString();
+	if (("".equals(telNum) || telNum == null)&&("".equals(addrStr) || addrStr == null))
 	{
 	    Toast.makeText(this, "请输入号码!", Toast.LENGTH_SHORT).show();
 	    return;
@@ -85,6 +89,7 @@ public class AddJobCheckActivity extends MyActivity
 	Intent intent = new Intent(AddJobCheckActivity.this, WaitingActivity.class);
 	intent.putExtra("str", "addJob");
 	intent.putExtra("telNum", telNum);
+	intent.putExtra("addrStr", addrStr);
 	startActivityForResult(intent, 0);
     }
 }

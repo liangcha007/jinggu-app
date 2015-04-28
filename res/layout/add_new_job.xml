@@ -134,7 +134,7 @@
                 </TableLayout>
             </RelativeLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/add_footer"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -146,17 +146,34 @@
                 android:paddingTop="10dp" >
 
                 <Button
-                    android:layout_width="match_parent"
+                    android:id="@+id/button_sumbit"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:background="@drawable/login_button_corners"
                     android:fitsSystemWindows="true"
-                    android:minHeight="43dip"
                     android:focusable="true"
+                    android:minHeight="43dip"
                     android:onClick="postHandler"
-                    android:text="@string/confirm_add_customer"
+                    android:text="@string/confir_paidan"
                     android:textColor="@color/black"
                     android:textSize="17sp" />
-            </RelativeLayout>
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toRightOf="@+id/wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/login_button_corners"
+                    android:fitsSystemWindows="true"
+                    android:focusable="true"
+                    android:minHeight="43dip"
+                    android:onClick="zhiHandler"
+                    android:text="@string/confir_zhiban"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+            </LinearLayout>
         </RelativeLayout>
     </ScrollView>
 

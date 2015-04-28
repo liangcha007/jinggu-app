@@ -85,7 +85,7 @@ public final class CaptureActivityHandler extends Handler
 	    Bundle bundle = message.getData();
 
 	    /***********************************************************************/
-	    Bitmap barcode = bundle == null ? null : (Bitmap) bundle.getParcelable(DecodeThread.BARCODE_BITMAP);// ���ñ����߳�
+	    Bitmap barcode = bundle == null ? null : (Bitmap) bundle.getParcelable(DecodeThread.BARCODE_BITMAP); 
 
 	    activity.handleDecode((Result) message.obj, barcode);
 	    break;

@@ -48,6 +48,7 @@ public class MipcaActivityCapture extends Activity implements Callback
     private static final float BEEP_VOLUME = 0.10f;
     private boolean vibrate;
     private String mark;
+    private boolean isLight;
 
     /** Called when the activity is first created. */
     @Override
@@ -58,11 +59,13 @@ public class MipcaActivityCapture extends Activity implements Callback
 	CameraManager.init(getApplication());
 	viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 	mark = "";
+	isLight = false;
 	if (getIntent() != null)
 	{
-	    if (getIntent().getSerializableExtra("Scan")!=null && !"".equals(getIntent().getSerializableExtra("Scan")))
+	    if (getIntent().getSerializableExtra("Scan") != null
+		    && !"".equals(getIntent().getSerializableExtra("Scan")))
 	    {
-		mark=getIntent().getSerializableExtra("Scan").toString();
+		mark = getIntent().getSerializableExtra("Scan").toString();
 	    }
 	}
 	Button mButtonBack = (Button) findViewById(R.id.button_back);
@@ -118,6 +121,7 @@ public class MipcaActivityCapture extends Activity implements Callback
 	    handler.quitSynchronously();
 	    handler = null;
 	}
+	isLight = false;
 	CameraManager.get().closeDriver();
     }
 
@@ -275,4 +279,25 @@ public class MipcaActivityCapture extends Activity implements Callback
 	}
     };
 
+    /**
+     * 打开手电筒
+     * 
+     * @param v
+     */
+    public void FlishLight(View v)
+    {
+	Button lightButton = (Button) this.findViewById(R.id.light_button);
+	if (!isLight)
+	{
+	    isLight = true;
+	    CameraManager.get().setFlashlight(isLight);
+	    lightButton.setBackground(getResources().getDrawable(R.drawable.dark));
+	}
+	else
+	{
+	    isLight = false;
+	    CameraManager.get().setFlashlight(isLight);
+	    lightButton.setBackground(getResources().getDrawable(R.drawable.light));
+	}
+    }
 }

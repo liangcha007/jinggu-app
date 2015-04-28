@@ -340,6 +340,100 @@ public class AddJobActivity extends MyActivity
     /**
      * 提交处理结果
      */
+    // 直办
+    public void zhiHandler(View v)
+    {
+	if (aList == null)
+	{
+	    Toast.makeText(this, "这个问题很严重!", Toast.LENGTH_SHORT).show();
+	}
+	else
+	{
+	    List<ParamBean> pList = new ArrayList<ParamBean>();
+	    for (int i = 0; i < aList.size(); i++)
+	    {
+		ItemViewBean iViewBean = aList.get(i);
+		ParamBean pbBean = new ParamBean();
+		pbBean.setParamName(iViewBean.getFd_name());
+		int type = iViewBean.getType();
+		switch (type)
+		{
+		case 2:
+		    // 单选
+		    RadioGroup rGroup = (RadioGroup) iViewBean.getView();
+		    RadioButton radioButton = (RadioButton) findViewById(rGroup.getCheckedRadioButtonId());
+		    if (radioButton != null)
+		    {
+			pbBean.setParamValue(radioButton.getText().toString());
+		    }
+		    else
+		    {
+			Toast.makeText(this, "请确定相关项是否录入正确!", Toast.LENGTH_SHORT).show();
+			return;
+		    }
+		    break;
+		case 3:
+		    // 下拉
+		    Spinner spinner = (Spinner) iViewBean.getView();
+		    String spTx = spinner.getSelectedItem().toString();
+		    if ("".equals(spTx) || spTx == null)
+		    {
+			Toast.makeText(this, "请确定相关项是否录入正确!", Toast.LENGTH_SHORT).show();
+			return;
+		    }
+		    else
+		    {
+			pbBean.setParamValue(spTx);
+		    }
+		    break;
+		default:
+		    // 文本
+		    TextView tx = (TextView) iViewBean.getView();
+		    String strTx = tx.getText().toString();
+		    if ("".equals(strTx) || strTx == null)
+		    {
+			Toast.makeText(this, "请确定相关项是否录入正确!", Toast.LENGTH_SHORT).show();
+			return;
+		    }
+		    else
+		    {
+			pbBean.setParamValue(strTx);
+		    }
+		    break;
+		}
+		pList.add(pbBean);
+	    }
+	    // 检查type参数
+	    ParamBean pb = new ParamBean();
+	    pb.setParamName(BaseConst.JSON_COMPANY_ID);
+	    pb.setParamValue(aBean.getCompand_id());
+	    pList.add(pb);
+	    // content
+	    int nums = tSecondList.size();
+	    StringBuffer str = new StringBuffer();
+	    for (int i = 0; i < nums; i++)
+	    {
+		TableSecondBean tsb = tSecondList.get(i);
+		String strs = tsb.getRuleId() + "," + tsb.getNums() + "," + tsb.getMuneId();
+		str.append(strs).append(";");
+	    }
+	    ParamBean pBean = new ParamBean();
+	    pBean.setParamName(BaseConst.JSON_RULES);
+	    pBean.setParamValue(str.toString());
+	    pList.add(pBean);
+	    // Toast.makeText(this, str.toString(), Toast.LENGTH_LONG).show();
+	    // 进行提交
+	    Bundle data = new Bundle();
+	    data.putSerializable("job", (Serializable) pList);
+	    Intent intentWait = new Intent(AddJobActivity.this, WaitingActivity.class);
+	    intentWait.putExtras(data);
+	    intentWait.putExtra("str", "confirm_addJob");
+	    intentWait.putExtra("flag", "1");
+	    startActivityForResult(intentWait, 0);
+	}
+    }
+
+    // 派单
     public void postHandler(View v)
     {
 	if (aList == null)
@@ -427,6 +521,7 @@ public class AddJobActivity extends MyActivity
 	    Intent intentWait = new Intent(AddJobActivity.this, WaitingActivity.class);
 	    intentWait.putExtras(data);
 	    intentWait.putExtra("str", "confirm_addJob");
+	    intentWait.putExtra("flag", "2");
 	    startActivityForResult(intentWait, 0);
 	}
     }

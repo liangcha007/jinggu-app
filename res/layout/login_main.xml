@@ -30,10 +30,19 @@
             android:id="@+id/appsname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="10dp"
             android:text="南阳蓝天燃气综合业务终端"
             android:textColor="@color/black"
-            android:paddingTop="10dp"
             android:textSize="26sp" />
+
+        <!-- <TextView -->
+        <!-- android:id="@+id/appsname" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="wrap_content" -->
+        <!-- android:paddingTop="10dp" -->
+        <!-- android:text="燃气综合业务终端" -->
+        <!-- android:textColor="@color/black" -->
+        <!-- android:textSize="26sp" /> -->
     </LinearLayout>
 
     <View
@@ -134,6 +143,24 @@
                 android:text="技术支持 郑州金鼓通信技术有限公司"
                 android:textColor="@color/darkgrey"
                 android:textSize="10sp" />
+
+            <!-- <TextView -->
+            <!-- android:id="@+id/id_version" -->
+            <!-- android:layout_width="wrap_content" -->
+            <!-- android:layout_height="wrap_content" -->
+            <!-- android:paddingBottom="10dp" -->
+            <!-- android:text="燃气公司" -->
+            <!-- android:textColor="@color/darkgrey" -->
+            <!-- android:textSize="10sp" /> -->
+
+
+            <!-- <TextView -->
+            <!-- android:id="@+id/company_name" -->
+            <!-- android:layout_width="wrap_content" -->
+            <!-- android:layout_height="wrap_content" -->
+            <!-- android:text="技术支持  河南软信科技有限公司" -->
+            <!-- android:textColor="@color/darkgrey" -->
+            <!-- android:textSize="10sp" /> -->
         </LinearLayout>
     </LinearLayout>
 
