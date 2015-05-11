@@ -361,6 +361,12 @@ public class MainActivityFrag extends FragmentActivity
     @Override
     protected void onResume()
     {
+	// 检测是否有震动，停止震动
+	if (BackGroundService.messageThread != null)
+	{
+	    BackGroundService.messageThread.interrupt();
+	    NewJobFragment.mHandler.sendEmptyMessage(0);
+	}
 	// 注册监听home键
 	BaseConst.registerHomeKeyReceiver(this);
 	updateIsBack(0);

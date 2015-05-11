@@ -26,8 +26,9 @@ public class BackGroundService extends Service
 {
 
     private String TAG = "JIN_GU";
+    public static BackGroundService bService = null;
     // 线程句柄
-    private MessageThread messageThread = null;
+    public static MessageThread messageThread = null;
     // 点击查看
     private Intent messageIntent = null;
     private PendingIntent messagePendingIntent = null;
@@ -52,6 +53,7 @@ public class BackGroundService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
+	bService = this;
 	// 初始化
 	msgTitile = getResources().getString(R.string.title_msg);
 	msgString = getResources().getString(R.string.title_new_job);
@@ -68,7 +70,7 @@ public class BackGroundService extends Service
 	messageNotification.defaults |= Notification.DEFAULT_LIGHTS; // 默认灯光提示
 	messageNotification.flags |= Notification.FLAG_INSISTENT; // 一直震动响铃，直到用户响应
 	// --
-	//--> messageNotification.defaults = Notification.DEFAULT_ALL;
+	// --> messageNotification.defaults = Notification.DEFAULT_ALL;
 	messageNotification.flags |= Notification.FLAG_AUTO_CANCEL;// 点击消息后,该消息自动退出
 
 	messageNotificatioManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -104,7 +106,7 @@ public class BackGroundService extends Service
     /**
      * 从服务器端获取消息
      */
-    class MessageThread extends Thread
+    public class MessageThread extends Thread
     {
 	// 设置为false后,线程跳出循环并结束
 	public boolean isRunning = true;
@@ -181,7 +183,7 @@ public class BackGroundService extends Service
 		}
 		catch (InterruptedException e)
 		{
-		    Log.i(TAG, e.getMessage());
+		    Log.i(TAG, "线程被打断了!");
 		}
 	    }
 	    Log.i(TAG, "Thread is out!");

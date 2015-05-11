@@ -17,6 +17,7 @@ import com.jingu.app.R;
 import com.jingu.app.bean.JobBean;
 import com.jingu.app.util.BaseConst;
 import com.jingu.app.util.MyActivity;
+import com.jingu.app.util.MyApplication;
 
 public class NewJobActivity extends MyActivity
 {
@@ -41,7 +42,7 @@ public class NewJobActivity extends MyActivity
 	j_content = (TextView) findViewById(R.id.j_content);
 	j_tel = (TextView) findViewById(R.id.j_tel);
 	rl_code = (EditText) findViewById(R.id.rl_code);
-
+	MyApplication.getInstance().addActivity(this);
 	// 默认不显示键盘
 	getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	// 只能输入数字

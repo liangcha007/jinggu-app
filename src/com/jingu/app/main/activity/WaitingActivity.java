@@ -14,6 +14,7 @@ import com.jingu.app.bean.AddFormBean;
 import com.jingu.app.bean.JobBean;
 import com.jingu.app.bean.ParamBean;
 import com.jingu.app.service.HttpClientService;
+import com.jingu.app.util.MyApplication;
 
 public class WaitingActivity extends Activity
 {
@@ -26,7 +27,7 @@ public class WaitingActivity extends Activity
     {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.waiting);
-
+	MyApplication.getInstance().addActivity(this);
 	intent = getIntent();
 
 	if (mHandler == null)
@@ -287,8 +288,10 @@ public class WaitingActivity extends Activity
 		}
 		@SuppressWarnings("unchecked")
 		List<ParamBean> pList = (List<ParamBean>) intent.getSerializableExtra("job");
+		JobBean job = (JobBean)intent.getSerializableExtra("job2");//直办时候，保存一份工单到本地
 		String flag = intent.getStringExtra("flag");
-		if (HttpClientService.postAddJobInfo(pList,flag))
+		String code = intent.getStringExtra("code");
+		if (HttpClientService.postAddJobInfo(WaitingActivity.this,pList,flag,job,code))
 		{
 		    // 提交成功
 		    msg.what = 8;

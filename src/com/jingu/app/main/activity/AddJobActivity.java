@@ -2,7 +2,9 @@ package com.jingu.app.main.activity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +32,7 @@ import com.jingu.app.bean.AddFormBean;
 import com.jingu.app.bean.AttrBean;
 import com.jingu.app.bean.ItemBean;
 import com.jingu.app.bean.ItemViewBean;
+import com.jingu.app.bean.JobBean;
 import com.jingu.app.bean.ParamBean;
 import com.jingu.app.bean.TableSecondBean;
 import com.jingu.app.service.AnalyistJosnService;
@@ -73,6 +76,8 @@ public class AddJobActivity extends MyActivity
 	int rowNums = aBean.getItemList().size();
 	for (int i = 0; i < rowNums; i++)
 	{
+	    // 声明一个抽象控件实体
+	    ItemViewBean iViewBean = new ItemViewBean();
 	    // 取一个控件节点信息
 	    ItemBean iBean = aBean.getItemList().get(i);
 	    // 声明一个行
@@ -84,8 +89,9 @@ public class AddJobActivity extends MyActivity
 	    fdName.setTextColor(getResources().getColor(R.color.black));
 	    fdName.setTextSize(16);
 	    row.addView(fdName);
-	    // 设置value
-	    ItemViewBean iViewBean = new ItemViewBean();
+	    // 设置中文名
+	    iViewBean.setTmp_static_name(iBean.getName());
+	    // 类型
 	    int type = Integer.parseInt(iBean.getType());
 	    switch (type)
 	    {
@@ -339,13 +345,34 @@ public class AddJobActivity extends MyActivity
 
     /**
      * 提交处理结果
+     * 
      */
-    // 直办
-    public void zhiHandler(View v)
+
+    /**
+     * 扫码直办
+     * 
+     * @param v
+     */
+    public void zhibanScan(View v)
     {
+	Intent intent = new Intent();
+	intent.putExtra("Scan", "Scan");
+	intent.setClass(AddJobActivity.this, MipcaActivityCapture.class);
+	startActivityForResult(intent, 1);
+    }
+
+    public void zhiBan(String codeStr)
+    {
+	String jobId = UUID.randomUUID().toString();// 工单ID
+	String jobTitle = "";// 工单标题
+	StringBuffer jobContent = new StringBuffer();// 工单内容
+	String jobTel = "";// 联系电话
+
+	jobContent.append("受理人：").append(BaseConst.username).append("\n");
 	if (aList == null)
 	{
 	    Toast.makeText(this, "这个问题很严重!", Toast.LENGTH_SHORT).show();
+	    return;
 	}
 	else
 	{
@@ -355,6 +382,8 @@ public class AddJobActivity extends MyActivity
 		ItemViewBean iViewBean = aList.get(i);
 		ParamBean pbBean = new ParamBean();
 		pbBean.setParamName(iViewBean.getFd_name());
+		// 设置直办插入的本地工单内容
+		jobContent.append(iViewBean.getTmp_static_name()).append(": ");
 		int type = iViewBean.getType();
 		switch (type)
 		{
@@ -365,6 +394,7 @@ public class AddJobActivity extends MyActivity
 		    if (radioButton != null)
 		    {
 			pbBean.setParamValue(radioButton.getText().toString());
+			jobContent.append(radioButton.getText().toString()).append("\n");
 		    }
 		    else
 		    {
@@ -384,6 +414,8 @@ public class AddJobActivity extends MyActivity
 		    else
 		    {
 			pbBean.setParamValue(spTx);
+			jobContent.append(spTx).append("\n");
+
 		    }
 		    break;
 		default:
@@ -398,6 +430,15 @@ public class AddJobActivity extends MyActivity
 		    else
 		    {
 			pbBean.setParamValue(strTx);
+			jobContent.append(strTx).append("\n");
+			if (pbBean.getParamName().equals(BaseConst.JSON_TEL))// 如果是电话号码，记录号码
+			{
+			    jobTel = strTx;// 设置电话号码
+			}
+			else if (pbBean.getParamName().equals("addr"))// 地址
+			{
+			    jobTitle = "直办-" + strTx;
+			}
 		    }
 		    break;
 		}
@@ -411,26 +452,54 @@ public class AddJobActivity extends MyActivity
 	    // content
 	    int nums = tSecondList.size();
 	    StringBuffer str = new StringBuffer();
-	    for (int i = 0; i < nums; i++)
+	    if (nums > 0)
 	    {
-		TableSecondBean tsb = tSecondList.get(i);
-		String strs = tsb.getRuleId() + "," + tsb.getNums() + "," + tsb.getMuneId();
-		str.append(strs).append(";");
+		jobContent.append("客户需求：\n");
+		for (int i = 0; i < nums; i++)
+		{
+		    TableSecondBean tsb = tSecondList.get(i);
+		    String strs = tsb.getRuleId() + "," + tsb.getNums() + "," + tsb.getMuneId();
+		    str.append(strs).append(";");
+
+		    jobContent.append(i + 1).append(".").append(tsb.getMuneName()).append(",")
+			    .append(tsb.getRuleName()).append(",").append(tsb.getNums()).append("个\n");
+		}
 	    }
+
 	    ParamBean pBean = new ParamBean();
 	    pBean.setParamName(BaseConst.JSON_RULES);
 	    pBean.setParamValue(str.toString());
 	    pList.add(pBean);
-	    // Toast.makeText(this, str.toString(), Toast.LENGTH_LONG).show();
-	    // 进行提交
+
+	    Intent intentWait = new Intent(AddJobActivity.this, WaitingActivity.class);
+	    if (!"".equals(codeStr)&&codeStr!=null&&!"".equals(codeStr.trim()))
+	    {
+		intentWait.putExtra("code", codeStr);
+		jobContent.append("钢瓶编号：").append(codeStr).append("\n");
+	    }
+
+	    // 将工单插入到本地
+	    // 插入新工单
+	    JobBean job = new JobBean(jobId, jobTitle, jobContent.toString(), BaseConst.username, jobTel,
+		    BaseConst.getDate2(new Date()));
 	    Bundle data = new Bundle();
 	    data.putSerializable("job", (Serializable) pList);
-	    Intent intentWait = new Intent(AddJobActivity.this, WaitingActivity.class);
+	    data.putSerializable("job2", job);
+
 	    intentWait.putExtras(data);
 	    intentWait.putExtra("str", "confirm_addJob");
 	    intentWait.putExtra("flag", "1");
 	    startActivityForResult(intentWait, 0);
 	}
+    }
+
+    // 直办 --- 同时保存一份工单到本地已办件中
+    public void zhiHandler(View v)
+    {
+	EditText codEditText = (EditText) findViewById(R.id.zhiban_num);
+	String code = codEditText.getText().toString();
+	zhiBan(code);
+
     }
 
     // 派单
@@ -439,6 +508,7 @@ public class AddJobActivity extends MyActivity
 	if (aList == null)
 	{
 	    Toast.makeText(this, "这个问题很严重!", Toast.LENGTH_SHORT).show();
+	    return;
 	}
 	else
 	{
@@ -539,10 +609,22 @@ public class AddJobActivity extends MyActivity
 		break;
 	    case 1:
 		// 提交失败
-		Toast.makeText(AddJobActivity.this, R.string.confirm_add_fail, Toast.LENGTH_SHORT).show();
+		Toast.makeText(AddJobActivity.this, R.string.confirm_add_job_fail, Toast.LENGTH_SHORT).show();
 		break;
 	    case 2:
 		// 正常返回
+		break;
+	    default:
+		break;
+	    }
+	}
+	else if (requestCode == 1)
+	{
+	    switch (resultCode)
+	    {
+	    case RESULT_OK:
+		String result = data.getExtras().getString("result");
+		zhiBan(result);
 		break;
 	    default:
 		break;

@@ -41,6 +41,21 @@ public class DBJobInfoDao
 	}
     }
 
+    public void add2(JobBean job, int nums)
+    {
+	if (job != null)
+	{
+	    db.execSQL(
+		    "INSERT INTO "
+			    + DatabaseHelper.JOB_TABLE
+			    + "('username','jobid','jobtitle','jobcontent','telnum','jobdate','confirmdate','jobreply','jobstate') VALUES(?,?,?,?,?,?,?,?,?)",
+		    new Object[] { job.getUsername(), job.getJobId(), job.getJobTitle(), job.getJobContent(),
+			    job.getTelNum(), job.getJobDate(), BaseConst.getDate2(new Date()), "完成", "O" });
+	}
+	// 检测下，删除那些多余的
+	delRecord(nums);
+    }
+
     /**
      * 设置保存保存已完成工单个数时候的更新操作
      * 
@@ -52,7 +67,7 @@ public class DBJobInfoDao
 	cv.put("jobreply", note);
 	cv.put("confirmdate", BaseConst.getDate2(new Date()));
 	cv.put("jobstate", "O");
-	if (BaseConst.TAG_CANCEL.equals(note)&&note!="")
+	if (BaseConst.TAG_CANCEL.equals(note) && note != "")
 	{
 	    cv.put("jobtype", "Q");
 	}

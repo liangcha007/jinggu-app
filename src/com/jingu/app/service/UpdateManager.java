@@ -331,8 +331,12 @@ public class UpdateManager
     {
 	File apkfile = new File(apkFilePath);
 	if (!apkfile.exists()) { return; }
+
+	//  设置最新的更新信息
+	BaseConst.setParams(mContext, BaseConst.UPDATE_CONTENT, updateMsg);
 	Intent i = new Intent(Intent.ACTION_VIEW);
 	i.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android.package-archive");
+	// 开启新的app
 	mContext.startActivity(i);
     }
 

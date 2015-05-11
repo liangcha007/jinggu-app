@@ -24,8 +24,10 @@ public class BaseConst
     public static final String HTTP_URL = "http://crm.jinguc.com/api/app.php";
     public static final String HTTP_UPDATE_URL = "http://crm.jinguc.com/app/update.xml";
 
-//    public static final String HTTP_URL = "http://219.156.138.98:8001/api/app.php";
-//    public static final String HTTP_UPDATE_URL = "http://219.156.138.98:8001/app/update.xml";
+    // public static final String HTTP_URL =
+    // "http://219.156.138.98:8001/api/app.php";
+    // public static final String HTTP_UPDATE_URL =
+    // "http://219.156.138.98:8001/app/update.xml";
 
     // 访问的act定义
     public static final String LOGIN_ACT = "login";
@@ -61,6 +63,7 @@ public class BaseConst
     public static final String JOB_NUMS = "job_nums";// 设置存储的工单个数
     public static final String SCAN_TIMES = "scan_times";// 设置自动刷新的参数
     public static final String UPDATE_PARAM = "update_param";// 是否自动更新
+    public static final String UPDATE_CONTENT = "update_content";// 更新参数
     // 分组显示的tag
     public static final String TAG_NEW = "新增";
     public static final String TAG_CUIBAN = "催办";
@@ -72,7 +75,7 @@ public class BaseConst
     // 监听home键的接收器
     private static MyHomeWatcherReceiver mHomeKeyReceiver = null;
 
-    // 定义全局用户名、用户密码，在updatUser函数中被跟新
+    // 定义全局用户名、用户密码，在updatUser函数中被更新
     public static String username = "";
     public static String password = "";
 
@@ -225,13 +228,18 @@ public class BaseConst
      */
     public static void updateUser(Context context, String un, String pw)
     {
+	// 用户名、密码促入到SharedPreferences中
 	SharedPreferences settings = context.getSharedPreferences("setting", 0);
 	SharedPreferences.Editor editor = settings.edit();
 	username = un;
 	password = pw;
-	editor.putString("username", username);
-	editor.putString("password", password);
+	editor.putString("username", un);
+	editor.putString("password", pw);
 	editor.commit();
+	// 存入到全局变量
+	MyApplication app = (MyApplication) context.getApplicationContext();
+	app.setUserName(un);
+	app.setPassWord(pw);
     }
 
     /**
@@ -247,6 +255,30 @@ public class BaseConst
 	String password = settings.getString("password", "");
 	UserBean user = new UserBean(username, password);
 	return user;
+    }
+
+    /**
+     * 获取用户名
+     * 
+     * @param context
+     * @return
+     */
+    public static String getUserName(Context context)
+    {
+	MyApplication app = (MyApplication) context.getApplicationContext();
+	return app.getUserName();
+    }
+
+    /**
+     * 获取用户密码
+     * 
+     * @param context
+     * @return
+     */
+    public static String getPassWord(Context context)
+    {
+	MyApplication app = (MyApplication) context.getApplicationContext();
+	return app.getPassWord();
     }
 
     /**

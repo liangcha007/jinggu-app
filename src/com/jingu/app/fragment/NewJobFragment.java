@@ -23,6 +23,7 @@ import com.jingu.app.main.activity.WaitingActivity;
 import com.jingu.app.service.HttpClientService;
 import com.jingu.app.ui.RefreshableView;
 import com.jingu.app.ui.RefreshableView.PullToRefreshListener;
+import com.jingu.app.util.MyApplication;
 import com.jingu.app.util.MyListViewUtil;
 
 public class NewJobFragment extends Fragment
@@ -37,6 +38,7 @@ public class NewJobFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+	MyApplication.getInstance().addActivity(this.getActivity());
 	if (mHandler == null)
 	{
 	    mHandler = new Handler()

@@ -317,8 +317,9 @@ public class HttpClientService
      * @param list
      * @return
      */
-    public static boolean postAddJobInfo(List<ParamBean> list, String flag)
+    public static boolean postAddJobInfo(Context context, List<ParamBean> list, String flag, JobBean job,String code )
     {
+	DBJobInfoDao dInfoDao = new DBJobInfoDao(context);
 	List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 	NameValuePair param1 = new BasicNameValuePair("username", BaseConst.username);
 	formparams.add(param1);
@@ -328,6 +329,8 @@ public class HttpClientService
 	formparams.add(param3);
 	NameValuePair param4 = new BasicNameValuePair("flag", flag);
 	formparams.add(param4);
+	NameValuePair param5 = new BasicNameValuePair("code", code);
+	formparams.add(param5);
 	for (int i = 0; i < list.size(); i++)
 	{
 	    ParamBean pBean = list.get(i);
@@ -342,13 +345,28 @@ public class HttpClientService
 	    {
 		// 提交失败了
 		Log.i(TAG, "Confirm form add new job is error,the returen josn is:" + ret_json);
+		dInfoDao.closeDB();
 		return false;
+	    }
+	    //如果是直办工单的话，本地保存一份
+	    if ("1".equals(flag))
+	    {
+		String rolNumber = getJson(ret_json, "roll_number");
+		if (!"".equals(rolNumber) && rolNumber != null)
+		{
+		    String jobContent = "受理号:" + rolNumber + "\n" + job.getJobContent();
+		    job.setJobContent(jobContent);
+		}
+		// 将工单存到本地
+		dInfoDao.add2(job, Integer.parseInt(BaseConst.getParams(context, BaseConst.JOB_NUMS)));
+		dInfoDao.closeDB();
 	    }
 	    return true;
 	}
 	catch (Exception e)
 	{
 	    Log.i(TAG, "Confirm form add new job is error , the msg is :" + e.getMessage());
+	    dInfoDao.closeDB();
 	    return false;
 	}
     }
@@ -440,6 +458,29 @@ public class HttpClientService
 	catch (JSONException e)
 	{
 	    Log.i(TAG, e.getMessage() + josntr);
+	    return null;
+	}
+    }
+
+    /**
+     * 解析json
+     * 
+     * @param josnStr
+     * @param parasName
+     * @return
+     */
+    public static String getJson(String josnStr, String parasName)
+    {
+	JSONObject jsonObject;
+	try
+	{
+	    jsonObject = new JSONObject(josnStr);
+	    String des = jsonObject.getString(parasName);
+	    return des;
+	}
+	catch (JSONException e)
+	{
+	    Log.i(TAG, e.getMessage() + josnStr);
 	    return null;
 	}
     }

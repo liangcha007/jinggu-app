@@ -1,5 +1,6 @@
 package com.jingu.app.main.activity;
 
+import android.app.ActivityManager;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,14 +40,18 @@ public class ExitActivity extends MyActivity
     public void exitYes(View v)
     {
 	this.finish();
+	// 停服务
 	if (MainActivityFrag.serviceIntent != null)
 	{
 	    stopService(MainActivityFrag.serviceIntent);
 	}
+	// 改标志
 	BaseConst.updateExit(this, 1);
+	// 退activity和进程
 	MyApplication.getInstance().exit();
-
-	// android.os.Process.killProcess(android.os.Process.myPid()); // 获取PID
-	// System.exit(0);
+	// 退出
+	ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+	manager.killBackgroundProcesses(getPackageName());
+	System.exit(0);
     }
 }

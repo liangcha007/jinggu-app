@@ -16,6 +16,7 @@ import android.widget.ListView;
 import com.jingu.app.R;
 import com.jingu.app.bean.JobBean;
 import com.jingu.app.main.activity.DoneJobActivity;
+import com.jingu.app.util.MyApplication;
 import com.jingu.app.util.MyListViewUtil;
 
 public class DoneJobFragment extends Fragment
@@ -27,6 +28,7 @@ public class DoneJobFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+	MyApplication.getInstance().addActivity(this.getActivity());
 	super.onCreate(savedInstanceState);
     }
 

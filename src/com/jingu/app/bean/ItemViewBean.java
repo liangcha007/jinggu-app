@@ -10,10 +10,22 @@ import android.widget.RadioButton;
  */
 public class ItemViewBean
 {
-    public String fd_name;
-    public int type;
-    public View view;
-    public List<RadioButton> rbList;
+    public String fd_name;// 控件id
+    public int type;// 类型
+    public View view;// 控件的实体对象
+    public List<RadioButton> rbList;// 可选的，控件的子项
+
+    public String tmp_static_name;// 对应中文名
+
+    public String getTmp_static_name()
+    {
+	return tmp_static_name;
+    }
+
+    public void setTmp_static_name(String tmp_static_name)
+    {
+	this.tmp_static_name = tmp_static_name;
+    }
 
     public String getFd_name()
     {

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jingu.app.R;
+import com.jingu.app.util.MyApplication;
 
 public class SettingFragment extends Fragment
 {
@@ -14,6 +15,7 @@ public class SettingFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+	MyApplication.getInstance().addActivity(this.getActivity());
 	super.onCreate(savedInstanceState);
     }
 

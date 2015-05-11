@@ -11,6 +11,7 @@ import com.jingu.app.R;
 import com.jingu.app.dao.DBJobInfoDao;
 import com.jingu.app.util.BaseConst;
 import com.jingu.app.util.MyActivity;
+import com.jingu.app.util.MyApplication;
 
 public class SysSettingActivity extends MyActivity
 {
@@ -29,7 +30,7 @@ public class SysSettingActivity extends MyActivity
 	adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	uSpinner.setSelection(0, true);
 	uSpinner.setAdapter(adapter);
-
+	MyApplication.getInstance().addActivity(this);
 	set_jobNum = (EditText) findViewById(R.id.set_job_num);
 	set_scan = (EditText) findViewById(R.id.set_scan_time);
 

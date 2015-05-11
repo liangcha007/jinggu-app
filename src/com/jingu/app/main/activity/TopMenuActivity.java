@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.jingu.app.R;
 import com.jingu.app.util.MyActivity;
+import com.jingu.app.util.MyApplication;
 
 public class TopMenuActivity extends MyActivity
 {
@@ -19,6 +20,7 @@ public class TopMenuActivity extends MyActivity
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.main_top_dialog);
 	tActivity = this;
+	MyApplication.getInstance().addActivity(this);
     }
 
     @Override

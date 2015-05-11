@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.jingu.app.R;
 import com.jingu.app.util.MyActivity;
+import com.jingu.app.util.MyApplication;
 
 public class AddJobCheckActivity extends MyActivity
 {
@@ -24,8 +25,9 @@ public class AddJobCheckActivity extends MyActivity
 	acActivity = this;
 	etel = (EditText) findViewById(R.id.tel_num);
 	etel.setInputType(InputType.TYPE_CLASS_NUMBER);
-	
 	addr = (EditText)findViewById(R.id.addr_content);
+	
+	MyApplication.getInstance().addActivity(this);
     }
 
     /**

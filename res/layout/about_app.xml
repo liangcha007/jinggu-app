@@ -34,11 +34,11 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/rl_body"
+        android:id="@+id/rl_head"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_layout"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
         android:padding="10dp"
         android:paddingTop="5dp" >
@@ -65,20 +65,47 @@
             android:textSize="14sp" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_body"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_head"
+        android:visibility="invisible"
+        android:gravity="center"
+        android:paddingTop="5dp" >
+
+        
+        <TextView
+            android:id="@+id/rl_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="版本特性:"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/version_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_b"
+            android:text="@string/update_content"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/rl_flooter"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/rl_body"
         android:gravity="center"
-        android:padding="10dp"
-        android:paddingTop="5dp" >
+        android:padding="10dp" >
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:gravity="center|bottom"
-            android:paddingBottom="45dp"
+            android:paddingBottom="15dp"
             android:text="技术支持:郑州金鼓通信技术有限公司"
             android:textColor="@color/black"
             android:textSize="16sp" />
