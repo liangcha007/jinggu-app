@@ -122,8 +122,9 @@ public class CustomerHttpClient
      * @param params
      * @return
      */
-    public static String post(String url, NameValuePair... params)
+    public static String post(NameValuePair... params)
     {
+	String url = MyApplication.getInstance().getHttp_url();
 	HttpPost request = null;
 	try
 	{
@@ -143,7 +144,7 @@ public class CustomerHttpClient
 	    if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
 	    {
 		Log.i(TAG, "httpResponse is faile,the Status Code is:" + response.getStatusLine().getStatusCode());
-		return BaseConst.RPARAM;
+		return "connect_error";
 	    }
 	    HttpEntity resEntity = response.getEntity();
 	    return (resEntity == null) ? null : EntityUtils.toString(resEntity, CHARSET);
@@ -152,7 +153,7 @@ public class CustomerHttpClient
 	{
 	    Log.i(TAG, "Http request is ERROR,the error msg is:" + e.getMessage());
 	    e.printStackTrace();
-	    throw new RuntimeException(BaseConst.RPARAM, e);
+	    throw new RuntimeException("connect_error", e);
 	}
 	finally
 	{
@@ -165,8 +166,9 @@ public class CustomerHttpClient
 	}
     }
 
-    public static String post(String url, List<NameValuePair> formparams)
+    public static String post(List<NameValuePair> formparams)
     {
+	String url = MyApplication.getInstance().getHttp_url();
 	HttpPost request = null;
 	try
 	{
@@ -180,14 +182,14 @@ public class CustomerHttpClient
 	    if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
 	    {
 		Log.i(TAG, "httpResponse is faile,the Status Code is:" + response.getStatusLine().getStatusCode());
-		return BaseConst.RPARAM;
+		return "connect_error";
 	    }
 	    HttpEntity resEntity = response.getEntity();
 	    return (resEntity == null) ? null : EntityUtils.toString(resEntity, CHARSET);
 	}
 	catch (Exception e)
 	{
-	    throw new RuntimeException(BaseConst.RPARAM, e);
+	    throw new RuntimeException("connect_error", e);
 	}
 	finally
 	{

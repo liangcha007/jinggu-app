@@ -1,13 +1,9 @@
 package com.jingu.app.test;
 
-import java.util.List;
-
 import android.test.AndroidTestCase;
-import android.util.Log;
 
 import com.jingu.app.bean.JobBean;
 import com.jingu.app.dao.DBJobInfoDao;
-import com.jingu.app.util.BaseConst;
 
 public class JobBeanDaoTest extends AndroidTestCase
 {
@@ -29,30 +25,4 @@ public class JobBeanDaoTest extends AndroidTestCase
 	jobDao.closeDB();
     }
 
-    public void testQueryJobList()
-    {
-	DBJobInfoDao jobDao = new DBJobInfoDao(getContext());
-	List<JobBean> joblist = jobDao.query(1, BaseConst.username);
-	for (int i = 0; i < joblist.size(); i++)
-	{
-	    JobBean jobBean = joblist.get(i);
-	    Log.i(TAG, jobBean.getJobId());
-	    Log.i(TAG, jobBean.getJobTitle());
-	    Log.i(TAG, jobBean.getJobContent());
-	    Log.i(TAG, jobBean.getJobDate());
-	    Log.i(TAG, jobBean.getJobState());
-	}
-	Log.i(TAG, "--------------");
-	List<JobBean> joblist2 = jobDao.query(2, BaseConst.username);
-	for (int i = 0; i < joblist2.size(); i++)
-	{
-	    JobBean jobBean = joblist2.get(i);
-	    Log.i(TAG, jobBean.getJobId());
-	    Log.i(TAG, jobBean.getJobTitle());
-	    Log.i(TAG, jobBean.getJobContent());
-	    Log.i(TAG, jobBean.getJobDate());
-	    Log.i(TAG, jobBean.getJobReply());
-	    Log.i(TAG, jobBean.getJobState());
-	}
-    }
 }

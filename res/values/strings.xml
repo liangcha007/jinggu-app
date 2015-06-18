@@ -30,6 +30,7 @@
     <string name="add_new_job">新增工单</string>
     <string name="commit_job">提交</string>
     <string name="scan_commit_job">扫码提交</string>
+    <string name="end_scan_job">完成扫码</string>
     <string name="tab_msg_title">待办件</string>
     <string name="tab_msg_list_title">已办件</string>
     <string name="default_msg_title">新的待办件，请尽快处理</string>
@@ -69,8 +70,8 @@
     <string name="sys_set_rload">系统重要参数已修改，下次登录生效!</string>
     
     <string name="sys_clean_job_list">已办件已经清理!</string>
-    <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
-    <string name="scan_fail">获取二维码信息失败，可能失误网络原因</string>
+    <string name="scan_text">将条形码放入框内, 即可自动扫描</string>
+    <string name="scan_fail">获取钢瓶信息失败，可能是网络原因</string>
 
     <!-- 长的测试文字 -->
     <string name="test_content">系统要求开户的电话号码唯一，请输入完整的电话号码或者电话号码的后四位，如果电话号码尚未开户，新建工单的同时会自动完成开户操作。</string>

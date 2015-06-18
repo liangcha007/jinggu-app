@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 
 import com.jingu.app.bean.Update;
 import com.jingu.app.bean.UserBean;
@@ -16,68 +17,78 @@ import com.jingu.app.service.HttpClientService;
 
 public class BaseConst
 {
-    public static final String RPARAM = "connect_error";
-    public static final String LOGINSTR = "login_address";
-    public static final String CONFIG = "jingu_config";
-    public static final String SUCCESS = "success";
-    public static final String FAILE = "faile";
-    public static final String HTTP_URL = "http://crm.jinguc.com/api/app.php";
-    public static final String HTTP_UPDATE_URL = "http://crm.jinguc.com/app/update.xml";
-
+    // public static final String HTTP_URL =
+    // "http://crm.jinguc.com/api/app.php";
+    // public static final String HTTP_UPDATE_URL =
+    // "http://crm.jinguc.com/app/update.xml";
+    //
     // public static final String HTTP_URL =
     // "http://219.156.138.98:8001/api/app.php";
     // public static final String HTTP_UPDATE_URL =
     // "http://219.156.138.98:8001/app/update.xml";
 
+    // public static final String RPARAM = "connect_error";
+    // public static final String LOGINSTR = "login_address";
+    // public static final String CONFIG = "jingu_config";
+    // public static final String SUCCESS = "success";
+    // public static final String FAILE = "faile";
     // 访问的act定义
-    public static final String LOGIN_ACT = "login";
-    public static final String CHECK_ACT = "check_job";
-    public static final String READ_ACT = "read_job";
-    public static final String CONFIRM_ACT = "handle_job_save";
-    public static final String GPS_ACT = "send_gps";
-    public static final String CHECK_VERSION_ACT = "check_version";
+    // public static final String LOGIN_ACT = "login";
+    // public static final String CHECK_ACT = "check_job";
+    // public static final String READ_ACT = "read_job";
+    // public static final String CONFIRM_ACT = "handle_job_save";
+    // public static final String GPS_ACT = "send_gps";
+    // public static final String CHECK_VERSION_ACT = "check_version";
+    //
+    // public static final String ADD_CUSTOMER_ACT = "add_com_form";
+    // public static final String ADD_CUSTOMER_CONFIRM_ACT = "add_com_save";
+    //
+    // public static final String ADD_JOB_ACT = "add_job_form";
+    // public static final String ADD_JOB_CONFIRM_ACT = "add_job_save";
+    //
+    // public static final String GET_BOTTLE_INFO = "read_cylinder";
+    //
+    // public static final String JSON_TYPE_NEW = "newJob";// 暂时为用到，用来区分存量用户和非存量
+    // public static final String JSON_TYPE_ALL_NEW = "userandjob";//
+    // 暂时未用到，用来区分存量用户和非存量
+    // public static final String JSON_COMPANY_ID = "company_id";//
+    // 存量用户id(为那个用户新增工单)
+    // public static final String JSON_COMPANY_TEL = "company_tel";// 用户电话(唯一标识)
+    //
+    // public static final String JSON_ATTRS = "service_items";// 用户电话(唯一标识)
+    // public static final String JSON_RULES = "service_contents";// 用户电话(唯一标识)
+    // public static final String JSON_SERVICE_TIME = "re_service_time_start";//
+    // 服务器开始时间
+    //
+    // public static final String JSON_ACT = "act_flag";// 状态标识 1.新增 2.催办 3.取消
+    // public static final String JSON_SRC_ROLL_NUMBER = "src_roll_number";//
+    // 关联单号
+    //
+    // public static final String CONFIRM_STR = "handle_situation";
+    // public static final String JSON_TEL = "company_tel";
+    //
+    // public static final String JOB_NUMS = "job_nums";// 设置存储的工单个数
+    // public static final String SCAN_TIMES = "scan_times";// 设置自动刷新的参数
 
-    public static final String ADD_CUSTOMER_ACT = "add_com_form";
-    public static final String ADD_CUSTOMER_CONFIRM_ACT = "add_com_save";
-
-    public static final String ADD_JOB_ACT = "add_job_form";
-    public static final String ADD_JOB_CONFIRM_ACT = "add_job_save";
-
-    public static final String GET_BOTTLE_INFO = "read_cylinder";
-
-    public static final String JSON_TYPE_NEW = "newJob";// 暂时为用到，用来区分存量用户和非存量
-    public static final String JSON_TYPE_ALL_NEW = "userandjob";// 暂时未用到，用来区分存量用户和非存量
-    public static final String JSON_COMPANY_ID = "company_id";// 存量用户id(为那个用户新增工单)
-    public static final String JSON_COMPANY_TEL = "company_tel";// 用户电话(唯一标识)
-
-    public static final String JSON_ATTRS = "service_items";// 用户电话(唯一标识)
-    public static final String JSON_RULES = "service_contents";// 用户电话(唯一标识)
-    public static final String JSON_SERVICE_TIME = "re_service_time_start";// 服务器开始时间
-
-    public static final String JSON_ACT = "act_flag";// 状态标识 1.新增 2.催办 3.取消
-    public static final String JSON_SRC_ROLL_NUMBER = "src_roll_number";// 关联单号
-
-    public static final String CONFIRM_STR = "handle_situation";
-    public static final String JSON_TEL = "company_tel";
-
-    public static final String JOB_NUMS = "job_nums";// 设置存储的工单个数
-    public static final String SCAN_TIMES = "scan_times";// 设置自动刷新的参数
-    public static final String UPDATE_PARAM = "update_param";// 是否自动更新
-    public static final String UPDATE_CONTENT = "update_content";// 更新参数
+    // public static final String UPDATE_PARAM = "update_param";// 是否自动更新
+    // public static final String UPDATE_CONTENT = "update_content";// 更新参数
+    // public static final String BOTTLE_CODE = "bottle_code";// 钢瓶编号
     // 分组显示的tag
-    public static final String TAG_NEW = "新增";
-    public static final String TAG_CUIBAN = "催办";
-    public static final String TAG_CANCEL = "取消";
+    // public static final String TAG_NEW = "新增";
+    // public static final String TAG_CUIBAN = "催办";
+    // public static final String TAG_CANCEL = "取消";
+
+    // 扫码popMeun
+    // public static final int SCAN_BOTTLE_CONFIRM = 1;// 扫码提交
+    // public static final int SCAN_BOTTLES_CONFIRM = 2;// 批量扫码
+    // public static final int SCAN_BOTTLE_RETURN = 3;// 结合扫码
 
     // 定义GPS更新参数
-    public static final long minTime = 2000;// 2000ms
-    public static final float minDistance = 10;// 10m
+    // public static final long minTime = 2000;// 2000ms
+    // public static final float minDistance = 10;// 10m
+
     // 监听home键的接收器
     private static MyHomeWatcherReceiver mHomeKeyReceiver = null;
-
-    // 定义全局用户名、用户密码，在updatUser函数中被更新
-    public static String username = "";
-    public static String password = "";
 
     public static String getDate(Date date)
     {
@@ -231,15 +242,13 @@ public class BaseConst
 	// 用户名、密码促入到SharedPreferences中
 	SharedPreferences settings = context.getSharedPreferences("setting", 0);
 	SharedPreferences.Editor editor = settings.edit();
-	username = un;
-	password = pw;
 	editor.putString("username", un);
 	editor.putString("password", pw);
 	editor.commit();
 	// 存入到全局变量
 	MyApplication app = (MyApplication) context.getApplicationContext();
-	app.setUserName(un);
-	app.setPassWord(pw);
+	UserBean userBean = new UserBean(un, pw);
+	app.setUser(userBean);
     }
 
     /**
@@ -258,27 +267,26 @@ public class BaseConst
     }
 
     /**
-     * 获取用户名
+     * 获取用户参数，如果说获取失败了，那就重新读取参数
      * 
-     * @param context
      * @return
      */
-    public static String getUserName(Context context)
+    public static UserBean getUserFromApplication(Context context)
     {
 	MyApplication app = (MyApplication) context.getApplicationContext();
-	return app.getUserName();
-    }
-
-    /**
-     * 获取用户密码
-     * 
-     * @param context
-     * @return
-     */
-    public static String getPassWord(Context context)
-    {
-	MyApplication app = (MyApplication) context.getApplicationContext();
-	return app.getPassWord();
+	UserBean u = app.getUser();
+	if (u == null || "".equals(u.getUsername()) || u.getUsername() == null || "".equals(u.getPassword())
+		|| u.getPassword() == null)
+	{
+	    u = getUser(context);
+	    app.setUser(u);
+	    // 从全局对象中获取数据失败，记录日志
+	    StringBuffer str = new StringBuffer();
+	    str.append("从全局对象中获取参数失败，重新读取参数，用户名为：").append(u.getUsername()).append(",密码为：").append(u.getPassword())
+		    .append("\n");
+	    FillUtil.writeLogToFile(str.toString());
+	}
+	return u;
     }
 
     /**
@@ -320,7 +328,8 @@ public class BaseConst
     {
 	try
 	{
-	    return Update.parse(HttpClientService.getInputStreambyURL(HTTP_UPDATE_URL));
+	    return Update
+		    .parse(HttpClientService.getInputStreambyURL(MyApplication.getInstance().getHttp_update_url()));
 	}
 	catch (Exception e)
 	{
@@ -350,5 +359,34 @@ public class BaseConst
 	    }
 	}
 	return IsRunning;
+    }
+
+    /**
+     * 获取app版本
+     * 
+     * @param mContext
+     * @return
+     */
+    public static String getAppVersion(Context mContext)
+    {
+	try
+	{
+	    return mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName;
+	}
+	catch (NameNotFoundException e)
+	{
+	    e.printStackTrace();
+	    return "version_error";
+	}
+    }
+
+    /**
+     * 获取手机型号
+     * 
+     * @return
+     */
+    public static String getPhoneName()
+    {
+	return android.os.Build.MODEL;
     }
 }

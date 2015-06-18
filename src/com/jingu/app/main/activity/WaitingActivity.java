@@ -205,7 +205,7 @@ public class WaitingActivity extends Activity
 		    return;
 		}
 		// 下面提交新开户请求
-		AddFormBean aBean = HttpClientService.getRepostOfAddCustomerInfo();
+		AddFormBean aBean = HttpClientService.getRepostOfAddCustomerInfo(WaitingActivity.this);
 		if (aBean != null)
 		{
 		    // 获取新开户信息成功
@@ -233,7 +233,7 @@ public class WaitingActivity extends Activity
 		}
 		@SuppressWarnings("unchecked")
 		List<ParamBean> pList = (List<ParamBean>) intent.getSerializableExtra("add");
-		if (HttpClientService.postAddCustomerInfo(pList))
+		if (HttpClientService.postAddCustomerInfo(WaitingActivity.this, pList))
 		{
 		    // 提交成功
 		    msg.what = 6;
@@ -260,7 +260,7 @@ public class WaitingActivity extends Activity
 		String telNum = intent.getStringExtra("telNum");
 		String addrStr = intent.getStringExtra("addrStr");
 		// 下面提交新增工单请求
-		AddFormBean aBean = HttpClientService.getRepostOfAddJobInfo(telNum, addrStr);
+		AddFormBean aBean = HttpClientService.getRepostOfAddJobInfo(WaitingActivity.this, telNum, addrStr);
 		if (aBean != null)
 		{
 		    // 获取新增工单信息成功
@@ -288,10 +288,10 @@ public class WaitingActivity extends Activity
 		}
 		@SuppressWarnings("unchecked")
 		List<ParamBean> pList = (List<ParamBean>) intent.getSerializableExtra("job");
-		JobBean job = (JobBean)intent.getSerializableExtra("job2");//直办时候，保存一份工单到本地
+		JobBean job = (JobBean) intent.getSerializableExtra("job2");// 直办时候，保存一份工单到本地
 		String flag = intent.getStringExtra("flag");
 		String code = intent.getStringExtra("code");
-		if (HttpClientService.postAddJobInfo(WaitingActivity.this,pList,flag,job,code))
+		if (HttpClientService.postAddJobInfo(WaitingActivity.this, pList, flag, job, code))
 		{
 		    // 提交成功
 		    msg.what = 8;
@@ -317,7 +317,7 @@ public class WaitingActivity extends Activity
 		}
 		Bundle bundle = intent.getExtras();
 		String jsString = bundle.getString("result");
-		String bContent = HttpClientService.getRepostOfBotterInfo(jsString);
+		String bContent = HttpClientService.getRepostOfBotterInfo(WaitingActivity.this, jsString);
 		if (bContent != null)
 		{
 		    // 提交成功

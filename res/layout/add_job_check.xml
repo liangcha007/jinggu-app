@@ -100,7 +100,8 @@
         android:layout_below="@id/rl_body"
         android:gravity="center"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp" >
+        android:paddingRight="15dp"
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/addr_title"

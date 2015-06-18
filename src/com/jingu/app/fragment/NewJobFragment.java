@@ -133,7 +133,6 @@ public class NewJobFragment extends Fragment
 		{
 		    Message msg = new Message();
 		    msg.what = 2;
-
 		    mHandler.sendMessage(msg);
 		}
 	    }

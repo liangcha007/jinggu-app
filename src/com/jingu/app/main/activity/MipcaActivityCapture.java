@@ -6,7 +6,6 @@ import java.util.Vector;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
-import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -49,6 +48,8 @@ public class MipcaActivityCapture extends Activity implements Callback
     private boolean vibrate;
     private String mark;
     private boolean isLight;
+    public Integer type;
+    private String bottleCode;
 
     /** Called when the activity is first created. */
     @Override
@@ -58,16 +59,20 @@ public class MipcaActivityCapture extends Activity implements Callback
 	setContentView(R.layout.activity_capture);
 	CameraManager.init(getApplication());
 	viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
+
 	mark = "";
+	type = 0;
+	bottleCode = "";
 	isLight = false;
 	if (getIntent() != null)
 	{
-	    if (getIntent().getSerializableExtra("Scan") != null
-		    && !"".equals(getIntent().getSerializableExtra("Scan")))
+	    if (getIntent().getStringExtra("Scan") != null && !"".equals(getIntent().getStringExtra("Scan")))
 	    {
-		mark = getIntent().getSerializableExtra("Scan").toString();
+		mark = getIntent().getStringExtra("Scan").toString();
+		type = getIntent().getIntExtra("type", 0);
 	    }
 	}
+	// 返回按钮的单击响应
 	Button mButtonBack = (Button) findViewById(R.id.button_back);
 	mButtonBack.setOnClickListener(new OnClickListener()
 	{
@@ -75,9 +80,77 @@ public class MipcaActivityCapture extends Activity implements Callback
 	    @Override
 	    public void onClick(View v)
 	    {
-		MipcaActivityCapture.this.finish();
+		if ("Scan".equals(mark))
+		{
+		    if (type == 2)
+		    {
+			Intent resultIntent = new Intent();
+			Bundle bundle = new Bundle();
+			bundle.putString("result", bottleCode);
+			resultIntent.putExtras(bundle);
+			MipcaActivityCapture.this.setResult(RESULT_FIRST_USER, resultIntent);
+			MipcaActivityCapture.this.finish();
+		    }
+		    else
+		    {
+			MipcaActivityCapture.this.finish();
+		    }
+		}
+		else
+		{
+		    MipcaActivityCapture.this.finish();
+		}
 	    }
 	});
+	// 判断是否要显示"扫码完成"
+	if ("Scan".equals(mark))
+	{
+	    Button button = (Button) findViewById(R.id.btn_end_scan);
+	    // 根据type类型不同，显示不同的按钮
+	    switch (type)
+	    {
+	    case 1:
+		// 扫码提交，按钮默认处理，不显示
+		break;
+	    case 2:
+		// 扫多码提交，显示按钮，点击提交工单
+		button.setVisibility(Button.VISIBLE);
+		button.setOnClickListener(new OnClickListener()
+		{
+		    @Override
+		    public void onClick(View v)
+		    {
+			Intent resultIntent = new Intent();
+			Bundle bundle = new Bundle();
+			bundle.putString("result", bottleCode);
+			resultIntent.putExtras(bundle);
+			MipcaActivityCapture.this.setResult(RESULT_OK, resultIntent);
+			MipcaActivityCapture.this.finish();
+		    }
+		});
+		break;
+	    case 3:
+		// 扫码返回，点击按钮返回前一页面
+		button.setVisibility(Button.VISIBLE);
+		button.setOnClickListener(new OnClickListener()
+		{
+		    @Override
+		    public void onClick(View v)
+		    {
+			Intent resultIntent = new Intent();
+			Bundle bundle = new Bundle();
+			bundle.putString("result", bottleCode);
+			resultIntent.putExtras(bundle);
+			MipcaActivityCapture.this.setResult(RESULT_FIRST_USER, resultIntent);
+			MipcaActivityCapture.this.finish();
+		    }
+		});
+		break;
+	    default:
+		break;
+	    }
+	}
+
 	hasSurface = false;
 	inactivityTimer = new InactivityTimer(this);
     }
@@ -138,32 +211,59 @@ public class MipcaActivityCapture extends Activity implements Callback
      * @param result
      * @param barcode
      */
-    public void handleDecode(Result result, Bitmap barcode)
+    public void handleDecode(Result result)
     {
 	inactivityTimer.onActivity();
 	playBeepSoundAndVibrate();
 	String resultString = result.getText();
 	if (resultString.equals(""))
 	{
-	    if ("Scan".equals(mark))
-	    {
-		Toast.makeText(MipcaActivityCapture.this, "扫码失败，请尝试其它角度重新扫描或者手动输入钢瓶编码!", Toast.LENGTH_SHORT).show();
-	    }
-	    else
-	    {
-		Toast.makeText(MipcaActivityCapture.this, "扫码失败，请尝试其它角度重新扫描!", Toast.LENGTH_SHORT).show();
-	    }
+	    Toast.makeText(MipcaActivityCapture.this, "扫码失败，请尝试其它角度重新扫描!", Toast.LENGTH_SHORT).show();
+	    MipcaActivityCapture.this.finish();
 	}
 	else
 	{
-	    Intent resultIntent = new Intent();
-	    Bundle bundle = new Bundle();
-	    bundle.putString("result", resultString);
-	    bundle.putParcelable("bitmap", barcode);
-	    resultIntent.putExtras(bundle);
-	    this.setResult(RESULT_OK, resultIntent);
+	    if ("Scan".equals(mark))
+	    {
+		if (type == 1)
+		{
+		    // 直接扫码提交
+		    Intent resultIntent = new Intent();
+		    Bundle bundle = new Bundle();
+		    bundle.putString("result", resultString);
+		    resultIntent.putExtras(bundle);
+		    MipcaActivityCapture.this.setResult(RESULT_OK, resultIntent);
+		    MipcaActivityCapture.this.finish();
+		}
+		else
+		{
+		    // 多次扫描，并记录扫码记录
+		    if ("".equals(bottleCode))
+		    {
+			bottleCode = resultString + ",";
+		    }
+		    else
+		    {
+			if (!bottleCode.contains(resultString))
+			{
+			    bottleCode += resultString + ",";
+			}
+		    }
+		    Toast.makeText(MipcaActivityCapture.this, "已受理,钢瓶编号：" + resultString, Toast.LENGTH_SHORT).show();
+		}
+	    }
+	    else
+	    {
+		// 扫描查看钢瓶信息
+		Intent resultIntent = new Intent();
+		Bundle bundle = new Bundle();
+		bundle.putString("result", resultString);
+		resultIntent.putExtras(bundle);
+		this.setResult(RESULT_OK, resultIntent);
+		MipcaActivityCapture.this.finish();
+	    }
 	}
-	MipcaActivityCapture.this.finish();
+
     }
 
     private void initCamera(SurfaceHolder surfaceHolder)

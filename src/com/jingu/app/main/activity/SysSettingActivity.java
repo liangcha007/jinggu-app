@@ -35,31 +35,31 @@ public class SysSettingActivity extends MyActivity
 	set_scan = (EditText) findViewById(R.id.set_scan_time);
 
 	// 初始化，并设置
-	String jobNum = BaseConst.getParams(this, BaseConst.JOB_NUMS);
+	String jobNum = BaseConst.getParams(this, "job_nums");
 	if ("".equals(jobNum) || jobNum == "" || jobNum == null)
 	{
 	    // 如果不存在默认参数，设置一下
-	    BaseConst.setParams(this, BaseConst.JOB_NUMS, set_jobNum.getText().toString());
+	    BaseConst.setParams(this, "job_nums", set_jobNum.getText().toString());
 	}
 	else
 	{
 	    set_jobNum.setText(jobNum);
 	}
 	// 初始化扫描参数
-	String setScan = BaseConst.getParams(this, BaseConst.SCAN_TIMES);
+	String setScan = BaseConst.getParams(this, "scan_times");
 	if ("".equals(setScan) || setScan == "" || setScan == null)
 	{
-	    BaseConst.setParams(this, BaseConst.SCAN_TIMES, set_scan.getText().toString());
+	    BaseConst.setParams(this, "scan_times", set_scan.getText().toString());
 	}
 	else
 	{
 	    set_scan.setText(setScan);
 	}
 	// 初始化是否自动更新参数
-	String setUpdate = BaseConst.getParams(this, BaseConst.UPDATE_PARAM);
+	String setUpdate = BaseConst.getParams(this, "update_param");
 	if ("".equals(setScan) || setScan == "" || setScan == null)
 	{
-	    BaseConst.setParams(this, BaseConst.UPDATE_PARAM, String.valueOf(uSpinner.getSelectedItemId()));
+	    BaseConst.setParams(this, "update_param", String.valueOf(uSpinner.getSelectedItemId()));
 	}
 	else
 	{
@@ -91,19 +91,19 @@ public class SysSettingActivity extends MyActivity
 	    return;
 	}
 	// 设置工单保存个数
-	BaseConst.setParams(this, BaseConst.JOB_NUMS, set_jobNum.getText().toString());
+	BaseConst.setParams(this, "job_nums", set_jobNum.getText().toString());
 	int jNums = Integer.parseInt(set_jobNum.getText().toString());
 	DBJobInfoDao djDao = new DBJobInfoDao(this);
 	// 直接清除掉那些多余的数据，按照时间先后清除
 	djDao.delRecord(jNums);
 	djDao.closeDB();
 	// 设置是否自动更新
-	BaseConst.setParams(this, BaseConst.UPDATE_PARAM, String.valueOf(uSpinner.getSelectedItemId()));
+	BaseConst.setParams(this, "update_param", String.valueOf(uSpinner.getSelectedItemId()));
 	// 系统刷新时间
-	String setScan = BaseConst.getParams(this, BaseConst.SCAN_TIMES);
+	String setScan = BaseConst.getParams(this, "scan_times");
 	if (setScan != null && !setScan.equals(set_scan.getText().toString()))
 	{
-	    BaseConst.setParams(this, BaseConst.SCAN_TIMES, set_scan.getText().toString());
+	    BaseConst.setParams(this, "scan_times", set_scan.getText().toString());
 	    Toast.makeText(this, getResources().getString(R.string.sys_set_rload), Toast.LENGTH_LONG).show();
 	}
 	else

@@ -24,7 +24,7 @@ public class AboutAppActivity extends MyActivity
 	try
 	{
 	    AppVersion.setText("程序版本:" + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
-	    String tmp_str = BaseConst.getParams(this, BaseConst.UPDATE_CONTENT);
+	    String tmp_str = BaseConst.getParams(this, "update_content");
 	    Log.i("JinGu", tmp_str);
 	    if (!"50".equals(tmp_str))
 	    {

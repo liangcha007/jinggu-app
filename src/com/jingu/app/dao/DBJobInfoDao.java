@@ -67,7 +67,7 @@ public class DBJobInfoDao
 	cv.put("jobreply", note);
 	cv.put("confirmdate", BaseConst.getDate2(new Date()));
 	cv.put("jobstate", "O");
-	if (BaseConst.TAG_CANCEL.equals(note) && note != "")
+	if ("取消".equals(note) && note != "")
 	{
 	    cv.put("jobtype", "Q");
 	}

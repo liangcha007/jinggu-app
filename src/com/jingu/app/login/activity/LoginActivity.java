@@ -2,7 +2,6 @@ package com.jingu.app.login.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,15 +35,16 @@ public class LoginActivity extends Activity
 	TextChange tChange = new TextChange();
 	user_name.addTextChangedListener(tChange);
 	pass_word.addTextChangedListener(tChange);
-//	TextView tVersion = (TextView) findViewById(R.id.id_version);
-//	try
-//	{
-//	    tVersion.setText("程序版本:" + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
-//	}
-//	catch (NameNotFoundException e)
-//	{
-//	    e.printStackTrace();
-//	}
+	// TextView tVersion = (TextView) findViewById(R.id.id_version);
+	// try
+	// {
+	// tVersion.setText("程序版本:" +
+	// getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+	// }
+	// catch (NameNotFoundException e)
+	// {
+	// e.printStackTrace();
+	// }
 	DBHandler();
 
     }
@@ -54,7 +54,7 @@ public class LoginActivity extends Activity
 	UserBean user = BaseConst.getUser(this);
 	user_name.setText(user.getUsername());
 	pass_word.setText(user.getPassword());
-	if (getExitMode() == 0)
+	if (!"".equals(user.getUsername()) && !"".equals(user.getPassword()))
 	{
 	    // 如果是后台退出又重新登录，那么肯定保存的有用户名和密码，则直接登录
 	    Bundle data = new Bundle();
@@ -101,12 +101,6 @@ public class LoginActivity extends Activity
 	Intent intent = new Intent(LoginActivity.this, LoginingActivity.class);
 	intent.putExtras(data);
 	startActivityForResult(intent, 0);
-    }
-
-    public int getExitMode()
-    {
-	SharedPreferences settings = getSharedPreferences("setting", 0);
-	return settings.getInt("exit", 1);
     }
 
     @Override

@@ -50,7 +50,7 @@ public final class ViewfinderView extends View
     private static final int MIDDLE_LINE_PADDING = 5;
     private static final int SPEEN_DISTANCE = 5;
     private static float density;
-    private static final int TEXT_SIZE = 16;
+    private static final int TEXT_SIZE = 14;
     private static final int TEXT_PADDING_TOP = 30;
     private Paint paint;
     private int slideTop;
@@ -132,7 +132,7 @@ public final class ViewfinderView extends View
 	    paint.setColor(Color.WHITE);
 	    paint.setTextSize(TEXT_SIZE * density);
 	    paint.setAlpha(0x40);
-	    paint.setTypeface(Typeface.create("System", Typeface.BOLD));
+	    paint.setTypeface(Typeface.create("System", Typeface.NORMAL));
 	    canvas.drawText(getResources().getString(R.string.scan_text), frame.left,
 		    (float) (frame.bottom + (float) TEXT_PADDING_TOP * density), paint);
 

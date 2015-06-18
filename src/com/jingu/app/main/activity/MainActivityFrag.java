@@ -135,7 +135,7 @@ public class MainActivityFrag extends FragmentActivity
 	}
 
 	// 自动检测是否需要更新
-	if ("0".equals(BaseConst.getParams(instance, BaseConst.UPDATE_PARAM)))
+	if ("0".equals(BaseConst.getParams(instance, "update_param")))
 	{
 	    UpdateManager uManager = UpdateManager.getUpdateManager();
 	    uManager.checkAppUpdate(this, false);
@@ -364,7 +364,7 @@ public class MainActivityFrag extends FragmentActivity
 	// 检测是否有震动，停止震动
 	if (BackGroundService.messageThread != null)
 	{
-	    BackGroundService.messageThread.interrupt();
+	    BackGroundService.messageThread.interrupt();// 线程终端，同时激活线程
 	    NewJobFragment.mHandler.sendEmptyMessage(0);
 	}
 	// 注册监听home键
@@ -526,7 +526,7 @@ public class MainActivityFrag extends FragmentActivity
     public void TruncateList(View v)
     {
 	DBJobInfoDao dInfoDao = new DBJobInfoDao(this);
-	dInfoDao.delall(BaseConst.username);
+	dInfoDao.delall(BaseConst.getUserFromApplication(this).getUsername());
 	dInfoDao.closeDB();
 	Toast.makeText(this, getResources().getString(R.string.sys_clean_job_list), Toast.LENGTH_SHORT).show();
     }

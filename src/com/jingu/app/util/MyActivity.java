@@ -36,6 +36,11 @@ public class MyActivity extends Activity
 	super.onDestroy();
     }
 
+    /**
+     * 是否后台运行时候，修改参数，用于显示消息数目，在service中要用到
+     * 
+     * @param i
+     */
     public void updateIsBack(int i)
     {
 	SharedPreferences settings = getSharedPreferences("setting", 0);

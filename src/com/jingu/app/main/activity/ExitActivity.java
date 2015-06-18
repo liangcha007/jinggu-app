@@ -1,7 +1,7 @@
 package com.jingu.app.main.activity;
 
-import android.app.ActivityManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -43,6 +43,7 @@ public class ExitActivity extends MyActivity
 	// 停服务
 	if (MainActivityFrag.serviceIntent != null)
 	{
+	    Log.i("JINGU", "stop service now !!");
 	    stopService(MainActivityFrag.serviceIntent);
 	}
 	// 改标志
@@ -50,8 +51,8 @@ public class ExitActivity extends MyActivity
 	// 退activity和进程
 	MyApplication.getInstance().exit();
 	// 退出
-	ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-	manager.killBackgroundProcesses(getPackageName());
-	System.exit(0);
+//	ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+//	manager.killBackgroundProcesses(getPackageName());
+//	System.exit(0);
     }
 }

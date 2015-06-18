@@ -12,6 +12,8 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.provider.MediaStore.Audio;
 import android.util.Log;
 
@@ -43,10 +45,22 @@ public class BackGroundService extends Service
     private LocationListener locationListener = null;
     public Long sleepTime;// 系统扫描时间
 
+    // 电源锁
+    private WakeLock wakeLock;
+
     @Override
     public IBinder onBind(Intent intent)
     {
 	return null;
+    }
+
+    @Override
+    public void onCreate()
+    {
+	wakeLock = null;
+	// 获取电源锁
+	acquireWakeLock();
+	super.onCreate();
     }
 
     @SuppressWarnings("deprecation")
@@ -80,7 +94,7 @@ public class BackGroundService extends Service
 	}
 	messagePendingIntent = PendingIntent.getActivity(this, 0, messageIntent, 0);
 	// 读取系统扫描参数
-	String setScan = BaseConst.getParams(this, BaseConst.SCAN_TIMES);
+	String setScan = BaseConst.getParams(this, "scan_times");
 	sleepTime = Long.valueOf(setScan) * 1000;
 	Log.i(TAG, setScan);
 	// 开启线程
@@ -96,10 +110,18 @@ public class BackGroundService extends Service
 	{
 	    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 	    locationListener = new MyGpsServiceListener(BackGroundService.this);
-	    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, BaseConst.minTime,
-		    BaseConst.minDistance, locationListener);
+	    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
 	}
 	Log.i(TAG, "Back Ground Service is Stard!!");
+	flags = START_STICKY;
+
+	// 设置service为前台进程
+	Notification notification = new Notification();
+	notification.flags = Notification.FLAG_ONGOING_EVENT;
+	notification.flags |= Notification.FLAG_NO_CLEAR;
+	notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
+	this.startForeground(0, notification);
+
 	return super.onStartCommand(intent, flags, startId);
     }
 
@@ -187,6 +209,7 @@ public class BackGroundService extends Service
 		}
 	    }
 	    Log.i(TAG, "Thread is out!");
+	    messageThread = null;
 	}
     }
 
@@ -194,6 +217,7 @@ public class BackGroundService extends Service
     @Override
     public void onDestroy()
     {
+	Log.i("JINGU", "Now in onDestory Service func");
 	// 清除提示栏
 	if (messageNotificationID > 0)
 	{
@@ -201,7 +225,6 @@ public class BackGroundService extends Service
 	}
 	// 停止线程
 	messageThread.isRunning = false;
-	messageIntent = null;
 	// 停止位置服务
 	if (locationManager != null && locationListener != null)
 	{
@@ -213,7 +236,14 @@ public class BackGroundService extends Service
 	    CustomerHttpClient.mHttpClient.getConnectionManager().shutdown();
 	    CustomerHttpClient.mHttpClient = null;
 	}
+	// 取消service的前台线程
+	stopForeground(true);
+	// 释放电源锁
+	releaseWakeLock();
 	MainActivityFrag.instance.serviceIntent = null;
+	// 置空线程
+	messageThread.interrupt();// 打断当前线程
+	messageIntent = null;
 	super.onDestroy();
 	Log.i(TAG, "destroy");
     }
@@ -251,5 +281,32 @@ public class BackGroundService extends Service
 	SharedPreferences.Editor editor = settings.edit();
 	editor.putInt("nums", nums);
 	editor.commit();
+    }
+
+    // 获取电源锁
+    private void acquireWakeLock()
+    {
+	if (null == wakeLock)
+	{
+	    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+	    wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, getClass()
+		    .getCanonicalName());
+	    if (null != wakeLock)
+	    {
+		Log.i(TAG, "Service call acquireWakeLock !");
+		wakeLock.acquire();
+	    }
+	}
+    }
+
+    // 释放设备电源锁
+    private void releaseWakeLock()
+    {
+	if (null != wakeLock && wakeLock.isHeld())
+	{
+	    Log.i(TAG, "Service call releaseWakeLock !");
+	    wakeLock.release();
+	    wakeLock = null;
+	}
     }
 }

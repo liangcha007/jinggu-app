@@ -34,7 +34,7 @@ public class MyGpsServiceListener implements LocationListener
 	    {
 		String latitude = Double.toString(location.getLatitude());
 		String longitude = Double.toString(location.getLongitude());
-		HttpClientService.sendGpsMsg(latitude, longitude);
+		HttpClientService.sendGpsMsg(context,latitude, longitude);
 		Log.v(TAG, "send GPSmsg!");
 	    }
 	}

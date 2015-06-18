@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.jingu.app.R;
 import com.jingu.app.bean.JobBean;
+import com.jingu.app.ui.BottleMenu;
+import com.jingu.app.ui.PopMenu;
 import com.jingu.app.util.BaseConst;
 import com.jingu.app.util.MyActivity;
 import com.jingu.app.util.MyApplication;
@@ -29,6 +31,8 @@ public class NewJobActivity extends MyActivity
     TextView j_tel;
     EditText rl_code;
     Spinner sp;
+
+    private BottleMenu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -66,6 +70,60 @@ public class NewJobActivity extends MyActivity
 	    Button b = (Button) findViewById(R.id.b_tel);
 	    b.setVisibility(Button.GONE);
 	}
+
+	// 初始化弹出菜单
+	initMenu();
+    }
+
+    /**
+     * 初始化弹出菜单
+     */
+    public void initMenu()
+    {
+	mMenu = new BottleMenu(this);
+	mMenu.addItem("扫码提交", 1);
+	mMenu.addItem("多瓶扫码", 2);
+	mMenu.addItem("扫码返回", 3);
+
+	mMenu.setOnItemSelectedListener(new PopMenu.OnItemSelectedListener()
+	{
+	    @Override
+	    public void selected(View view, PopMenu.Item item, int position)
+	    {
+		Intent intent = new Intent();
+		switch (item.id)
+		{
+		case 1:
+		    intent.putExtra("Scan", "Scan");
+		    intent.putExtra("type", 1);
+		    intent.setClass(NewJobActivity.this, MipcaActivityCapture.class);
+		    startActivityForResult(intent, 1);
+		    break;
+		case 2:
+		    intent.putExtra("Scan", "Scan");
+		    intent.putExtra("type", 2);
+		    intent.setClass(NewJobActivity.this, MipcaActivityCapture.class);
+		    startActivityForResult(intent, 1);
+		    break;
+		case 3:
+		    intent.putExtra("Scan", "Scan");
+		    intent.putExtra("type", 3);
+		    intent.setClass(NewJobActivity.this, MipcaActivityCapture.class);
+		    startActivityForResult(intent, 1);
+		    break;
+		}
+	    }
+	});
+    }
+
+    /**
+     * 扫描二维码提交工单
+     * 
+     * @param v
+     */
+    public void scanConfirm(View v)
+    {
+	mMenu.showAsDropDown(v);
     }
 
     /**
@@ -111,9 +169,14 @@ public class NewJobActivity extends MyActivity
 	jBean.setJobReply(replyStr);
 	Bundle data = new Bundle();
 	data.putSerializable("job", jBean);
-	if (!"".equals(rl_code.getText()) || rl_code.getText() != null)
+	String tmp = rl_code.getText().toString();
+	if (!"".equals(tmp) && tmp != null && tmp.length()>0)
 	{
-	    data.putString("result", rl_code.getText().toString());
+	    if (",".equals(tmp.substring(tmp.length() - 1, tmp.length())))
+	    {
+		tmp = tmp.substring(0, tmp.length() - 1);
+	    }
+	    data.putString("result", tmp);
 	}
 	else
 	{
@@ -123,19 +186,6 @@ public class NewJobActivity extends MyActivity
 	intentWait.putExtras(data);
 	intentWait.putExtra("str", "confirm");
 	startActivityForResult(intentWait, 0);
-    }
-
-    /**
-     * 扫描二维码提交工单
-     * 
-     * @param v
-     */
-    public void scanConfirm(View v)
-    {
-	Intent intent = new Intent();
-	intent.putExtra("Scan", "Scan");
-	intent.setClass(NewJobActivity.this, MipcaActivityCapture.class);
-	startActivityForResult(intent, 1);
     }
 
     @Override
@@ -187,16 +237,31 @@ public class NewJobActivity extends MyActivity
 	    switch (resultCode)
 	    {
 	    case RESULT_OK:
+		// 直接提交(扫码提交和扫多码提交)
 		String replyStr = sp.getSelectedItem().toString();
 		jBean.setJobReply(replyStr);
 		String result = data.getExtras().getString("result");
 		Bundle bundle2 = new Bundle();
 		bundle2.putSerializable("job", jBean);
+		if (!"".equals(result) && result != null && result.length()>0)
+		{
+		    if (",".equals(result.substring(result.length() - 1, result.length())))
+		    {
+			result = result.substring(0, result.length() - 1);
+		    }
+		}
 		bundle2.putString("result", result);
 		Intent intentWait = new Intent(NewJobActivity.this, WaitingActivity.class);
 		intentWait.putExtras(bundle2);
 		intentWait.putExtra("str", "confirm");
 		startActivityForResult(intentWait, 0);
+		break;
+	    case RESULT_FIRST_USER:
+		// 扫码后返回，结合手动输入提交
+		String result1 = data.getExtras().getString("result");
+		String codeTmp = rl_code.getText().toString();
+		codeTmp = result1 + codeTmp;
+		rl_code.setText(codeTmp);
 		break;
 	    default:
 		break;

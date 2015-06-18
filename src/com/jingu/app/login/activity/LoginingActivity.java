@@ -110,9 +110,9 @@ public class LoginingActivity extends Activity
 		}
 		UserBean user = (UserBean) intent.getSerializableExtra("user");
 		// 登录请求，获取回复信息
-		String return_str = HttpClientService.getRpostOfLogin(user);
+		String return_str = HttpClientService.getRpostOfLogin(LoginingActivity.this, user);
 		// 判断http回复
-		if (BaseConst.RPARAM.equals(return_str) || return_str == null)
+		if ("connect_error".equals(return_str) || return_str == null)
 		{
 		    // conntect_error
 		    dbManager.closeDB();
@@ -125,7 +125,7 @@ public class LoginingActivity extends Activity
 		    // 解析http回复的消息
 		    JSONObject jsonObject = new JSONObject(return_str);
 		    String state = jsonObject.getString("state");
-		    if (BaseConst.SUCCESS.equals(state))
+		    if ("success".equals(state))
 		    {
 			// 获取了用户信息,将用户信息写入到数据库中
 			UserBean userBean = dbManager.query(user.getUsername());

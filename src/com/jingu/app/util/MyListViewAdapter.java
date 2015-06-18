@@ -27,9 +27,9 @@ public class MyListViewAdapter extends BaseAdapter
 	this.listItem = listItem;
 	this.context = ct;
 	groupkey = new ArrayList<String>();
-	groupkey.add(BaseConst.TAG_NEW);
-	groupkey.add(BaseConst.TAG_CUIBAN);
-	groupkey.add(BaseConst.TAG_CANCEL);
+	groupkey.add("新增");
+	groupkey.add("催办");
+	groupkey.add("取消");
     }
 
     @Override

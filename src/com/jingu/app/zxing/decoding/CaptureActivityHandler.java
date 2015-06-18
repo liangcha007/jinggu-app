@@ -20,9 +20,7 @@ import java.util.Vector;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -82,12 +80,20 @@ public final class CaptureActivityHandler extends Handler
 	case R.id.decode_succeeded:
 	    Log.d(TAG, "Got decode succeeded message");
 	    state = State.SUCCESS;
-	    Bundle bundle = message.getData();
+	    // 生成图片
+	    // Bundle bundle = message.getData();
+	    // Bitmap barcode = bundle == null ? null : (Bitmap)
+	    // bundle.getParcelable(DecodeThread.BARCODE_BITMAP);
 
-	    /***********************************************************************/
-	    Bitmap barcode = bundle == null ? null : (Bitmap) bundle.getParcelable(DecodeThread.BARCODE_BITMAP); 
-
-	    activity.handleDecode((Result) message.obj, barcode);
+	    // 发送消息到activity界面
+	    activity.handleDecode((Result) message.obj);
+	    if (activity.type != 1)
+	    {
+		Log.i(TAG, "not the only one bottles need scan,you see!!");
+		// 重新继续开始扫描
+		state = State.PREVIEW;
+		CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), R.id.decode);
+	    }
 	    break;
 	case R.id.decode_failed:
 	    // We're decoding as fast as possible, so when one decode fails,

@@ -36,6 +36,8 @@ import com.jingu.app.bean.JobBean;
 import com.jingu.app.bean.ParamBean;
 import com.jingu.app.bean.TableSecondBean;
 import com.jingu.app.service.AnalyistJosnService;
+import com.jingu.app.ui.BottleMenu;
+import com.jingu.app.ui.PopMenu;
 import com.jingu.app.util.BaseConst;
 import com.jingu.app.util.MyActivity;
 
@@ -57,6 +59,8 @@ public class AddJobActivity extends MyActivity
     public TableLayout tableSecond = null;// 规格表格(在不同的地方操作)
     public String[] Fir = null; // 一级菜单数组
     public String[][] Sec = null;// 二级菜单数组
+
+    private BottleMenu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -221,6 +225,9 @@ public class AddJobActivity extends MyActivity
 	}
 	// 第二个table
 	tableSecond = (TableLayout) findViewById(R.id.table_second);
+
+	// 初始化弹出菜单
+	initMenu();
     }
 
     /**
@@ -327,6 +334,47 @@ public class AddJobActivity extends MyActivity
     }
 
     /**
+     * 初始化弹出菜单
+     */
+    public void initMenu()
+    {
+	mMenu = new BottleMenu(this);
+	mMenu.addItem("扫码提交", 1);
+	mMenu.addItem("多瓶扫码", 2);
+	mMenu.addItem("扫码返回", 3);
+
+	mMenu.setOnItemSelectedListener(new PopMenu.OnItemSelectedListener()
+	{
+	    @Override
+	    public void selected(View view, PopMenu.Item item, int position)
+	    {
+		Intent intent = new Intent();
+		switch (item.id)
+		{
+		case 1:
+		    intent.putExtra("Scan", "Scan");
+		    intent.putExtra("type", 1);
+		    intent.setClass(AddJobActivity.this, MipcaActivityCapture.class);
+		    startActivityForResult(intent, 1);
+		    break;
+		case 2:
+		    intent.putExtra("Scan", "Scan");
+		    intent.putExtra("type", 2);
+		    intent.setClass(AddJobActivity.this, MipcaActivityCapture.class);
+		    startActivityForResult(intent, 1);
+		    break;
+		case 3:
+		    intent.putExtra("Scan", "Scan");
+		    intent.putExtra("type", 3);
+		    intent.setClass(AddJobActivity.this, MipcaActivityCapture.class);
+		    startActivityForResult(intent, 1);
+		    break;
+		}
+	    }
+	});
+    }
+
+    /**
      * 返回按钮
      */
     public void backHandler(View v)
@@ -344,21 +392,17 @@ public class AddJobActivity extends MyActivity
     }
 
     /**
-     * 提交处理结果
-     * 
-     */
-
-    /**
      * 扫码直办
      * 
      * @param v
      */
     public void zhibanScan(View v)
     {
-	Intent intent = new Intent();
-	intent.putExtra("Scan", "Scan");
-	intent.setClass(AddJobActivity.this, MipcaActivityCapture.class);
-	startActivityForResult(intent, 1);
+	// Intent intent = new Intent();
+	// intent.putExtra("Scan", "Scan");
+	// intent.setClass(AddJobActivity.this, MipcaActivityCapture.class);
+	// startActivityForResult(intent, 1);
+	mMenu.showAsDropDown(v);
     }
 
     public void zhiBan(String codeStr)
@@ -368,7 +412,7 @@ public class AddJobActivity extends MyActivity
 	StringBuffer jobContent = new StringBuffer();// 工单内容
 	String jobTel = "";// 联系电话
 
-	jobContent.append("受理人：").append(BaseConst.username).append("\n");
+	jobContent.append("受理人：").append(BaseConst.getUserFromApplication(this).getUsername()).append("\n");
 	if (aList == null)
 	{
 	    Toast.makeText(this, "这个问题很严重!", Toast.LENGTH_SHORT).show();
@@ -431,7 +475,7 @@ public class AddJobActivity extends MyActivity
 		    {
 			pbBean.setParamValue(strTx);
 			jobContent.append(strTx).append("\n");
-			if (pbBean.getParamName().equals(BaseConst.JSON_TEL))// 如果是电话号码，记录号码
+			if ("company_tel".equals(pbBean.getParamName()))// 如果是电话号码，记录号码
 			{
 			    jobTel = strTx;// 设置电话号码
 			}
@@ -446,7 +490,7 @@ public class AddJobActivity extends MyActivity
 	    }
 	    // 检查type参数
 	    ParamBean pb = new ParamBean();
-	    pb.setParamName(BaseConst.JSON_COMPANY_ID);
+	    pb.setParamName("company_id");
 	    pb.setParamValue(aBean.getCompand_id());
 	    pList.add(pb);
 	    // content
@@ -467,20 +511,24 @@ public class AddJobActivity extends MyActivity
 	    }
 
 	    ParamBean pBean = new ParamBean();
-	    pBean.setParamName(BaseConst.JSON_RULES);
+	    pBean.setParamName("service_contents");
 	    pBean.setParamValue(str.toString());
 	    pList.add(pBean);
 
 	    Intent intentWait = new Intent(AddJobActivity.this, WaitingActivity.class);
-	    if (!"".equals(codeStr)&&codeStr!=null&&!"".equals(codeStr.trim()))
+	    if (!"".equals(codeStr) && codeStr != null && !"".equals(codeStr.trim()))
 	    {
+		if (",".equals(codeStr.substring(codeStr.length() - 1, codeStr.length())))
+		{
+		    codeStr = codeStr.substring(0, codeStr.length() - 1);
+		}
 		intentWait.putExtra("code", codeStr);
 		jobContent.append("钢瓶编号：").append(codeStr).append("\n");
 	    }
 
 	    // 将工单插入到本地
 	    // 插入新工单
-	    JobBean job = new JobBean(jobId, jobTitle, jobContent.toString(), BaseConst.username, jobTel,
+	    JobBean job = new JobBean(jobId, jobTitle, jobContent.toString(), BaseConst.getUserFromApplication(this).getUsername(), jobTel,
 		    BaseConst.getDate2(new Date()));
 	    Bundle data = new Bundle();
 	    data.putSerializable("job", (Serializable) pList);
@@ -499,7 +547,6 @@ public class AddJobActivity extends MyActivity
 	EditText codEditText = (EditText) findViewById(R.id.zhiban_num);
 	String code = codEditText.getText().toString();
 	zhiBan(code);
-
     }
 
     // 派单
@@ -568,7 +615,7 @@ public class AddJobActivity extends MyActivity
 	    }
 	    // 检查type参数
 	    ParamBean pb = new ParamBean();
-	    pb.setParamName(BaseConst.JSON_COMPANY_ID);
+	    pb.setParamName("company_id");
 	    pb.setParamValue(aBean.getCompand_id());
 	    pList.add(pb);
 	    // content
@@ -581,7 +628,7 @@ public class AddJobActivity extends MyActivity
 		str.append(strs).append(";");
 	    }
 	    ParamBean pBean = new ParamBean();
-	    pBean.setParamName(BaseConst.JSON_RULES);
+	    pBean.setParamName("service_contents");
 	    pBean.setParamValue(str.toString());
 	    pList.add(pBean);
 	    // Toast.makeText(this, str.toString(), Toast.LENGTH_LONG).show();
@@ -623,8 +670,17 @@ public class AddJobActivity extends MyActivity
 	    switch (resultCode)
 	    {
 	    case RESULT_OK:
-		String result = data.getExtras().getString("result");
+		// 原处理方式，根据获取的钢瓶编号，直接提交
+		String result = data.getStringExtra("result");
 		zhiBan(result);
+		break;
+	    case RESULT_FIRST_USER:
+		// 将钢瓶编码内容更新到钢瓶编码编辑框
+		String result1 = data.getStringExtra("result");
+		EditText codEditText = (EditText) findViewById(R.id.zhiban_num);
+		String code = codEditText.getText().toString();
+		code = result1 + code;
+		codEditText.setText(code);
 		break;
 	    default:
 		break;
@@ -650,7 +706,6 @@ public class AddJobActivity extends MyActivity
 	secondSpinner.setAdapter(secondAdapter);
 	secondSpinner.setSelection(0, true); // 默认选中第0个
 
-	// 省级下拉框监听
 	firstSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
 	{
 	    // 表示选项被改变的时候触发此方法，主要实现办法：动态改变地级适配器的绑定值

@@ -61,6 +61,7 @@ public class MyListViewUtil
 
     /**
      * 已完成工单的listview分组显示的adapter
+     * 
      * @return
      */
     public MyListViewAdapter getAdapterForDoneJob()
@@ -94,11 +95,11 @@ public class MyListViewUtil
     {
 	ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
 	HashMap<String, Object> map1 = new HashMap<String, Object>();
-	map1.put("tag_content", BaseConst.TAG_NEW);
+	map1.put("tag_content", "新增");
 	HashMap<String, Object> map2 = new HashMap<String, Object>();
-	map2.put("tag_content", BaseConst.TAG_CUIBAN);
+	map2.put("tag_content", "催办");
 	HashMap<String, Object> map3 = new HashMap<String, Object>();
-	map3.put("tag_content", BaseConst.TAG_CANCEL);
+	map3.put("tag_content", "取消");
 
 	int mark = 0;
 	// 取消单(jobtype=Q)
@@ -236,7 +237,6 @@ public class MyListViewUtil
 	return list;
     }
 
-   
     public static JobBean getJob(HashMap<String, Object> item)
     {
 	JobBean newJobItem = new JobBean();
@@ -271,7 +271,7 @@ public class MyListViewUtil
     public List<JobBean> queryJob(int i)
     {
 	DBJobInfoDao dInfoDao = new DBJobInfoDao(context);
-	String un = BaseConst.username;
+	String un = BaseConst.getUserFromApplication(context).getUsername();
 	if ("".equals(un) || un == null)
 	{
 	    un = BaseConst.getUser(context).getUsername();
@@ -281,11 +281,9 @@ public class MyListViewUtil
 	dInfoDao.closeDB();
 	return listJobBeans;
     }
-    
-    
+
     /**
-     * 旧方法，获取已完成工单的adapter信息
-     * 原来已经完成工单的adapter的数据获取，已经废弃，2015-3-11
+     * 旧方法，获取已完成工单的adapter信息 原来已经完成工单的adapter的数据获取，已经废弃，2015-3-11
      * 
      * @return
      */

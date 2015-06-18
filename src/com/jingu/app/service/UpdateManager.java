@@ -333,7 +333,7 @@ public class UpdateManager
 	if (!apkfile.exists()) { return; }
 
 	//  设置最新的更新信息
-	BaseConst.setParams(mContext, BaseConst.UPDATE_CONTENT, updateMsg);
+	BaseConst.setParams(mContext, "update_content", updateMsg);
 	Intent i = new Intent(Intent.ACTION_VIEW);
 	i.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android.package-archive");
 	// 开启新的app
