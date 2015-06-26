@@ -1,7 +1,6 @@
 package com.jingu.app.main.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -40,19 +39,18 @@ public class ExitActivity extends MyActivity
     public void exitYes(View v)
     {
 	this.finish();
-	// 停服务
-	if (MainActivityFrag.serviceIntent != null)
-	{
-	    Log.i("JINGU", "stop service now !!");
-	    stopService(MainActivityFrag.serviceIntent);
-	}
-	// 改标志
-	BaseConst.updateExit(this, 1);
+	// 正式退出，修改password为空
+	BaseConst.setParams(ExitActivity.this, "password", "");
+	// 修改标识
+	MyApplication.getInstance().setExit(true);
 	// 退activity和进程
 	MyApplication.getInstance().exit();
+	// 停服务
+	stopService(MainActivityFrag.serviceIntent);
 	// 退出
-//	ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-//	manager.killBackgroundProcesses(getPackageName());
-//	System.exit(0);
+	// ActivityManager manager = (ActivityManager)
+	// getSystemService(ACTIVITY_SERVICE);
+	// manager.killBackgroundProcesses(getPackageName());
+	// System.exit(0);
     }
 }

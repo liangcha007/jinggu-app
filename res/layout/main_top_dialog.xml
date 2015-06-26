@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:gravity="center"
-                android:text="点击新开户或者新增工单"
+                android:text="点击新增工单或者扫一扫"
                 android:textColor="#fff"
                 android:textSize="16sp" />
 
@@ -54,6 +54,20 @@
                 android:gravity="center"
                 android:onClick="addNewJob"
                 android:text="新增工单"
+                android:textColor="#fff"
+                android:textSize="18sp" />
+            
+             <Button
+                android:id="@+id/exitBtn2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="15dp"
+                android:background="@anim/btn_style_alert_dialog_cancel"
+                android:gravity="center"
+                android:onClick="codeScan"
+                android:text="扫一扫"
                 android:textColor="#fff"
                 android:textSize="18sp" />
         </LinearLayout>

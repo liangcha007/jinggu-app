@@ -529,7 +529,7 @@ public class AddJobActivity extends MyActivity
 	    // 将工单插入到本地
 	    // 插入新工单
 	    JobBean job = new JobBean(jobId, jobTitle, jobContent.toString(), BaseConst.getUserFromApplication(this).getUsername(), jobTel,
-		    BaseConst.getDate2(new Date()));
+		    BaseConst.getDate(new Date(),2));
 	    Bundle data = new Bundle();
 	    data.putSerializable("job", (Serializable) pList);
 	    data.putSerializable("job2", job);

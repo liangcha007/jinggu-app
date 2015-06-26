@@ -2,6 +2,7 @@ package com.jingu.app.main.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -66,14 +67,27 @@ public class TopMenuActivity extends MyActivity
 	startActivityForResult(intent, 0);
     }
 
-    
     /**
      * 新增工单--输入客户手机号码查询界面
+     * 
      * @param v
      */
     public void addNewJob(View v)
     {
 	Intent intent = new Intent(TopMenuActivity.this, AddJobCheckActivity.class);
+	startActivity(intent);
+	this.finish();
+    }
+
+    /**
+     * 扫一扫
+     * 
+     * @param v
+     */
+    public void codeScan(View v)
+    {
+	Intent intent = new Intent(TopMenuActivity.this, ScanCodeActivity.class);
+	Log.i("jingu", "now Start ScanCodeActivity!");
 	startActivity(intent);
 	this.finish();
     }

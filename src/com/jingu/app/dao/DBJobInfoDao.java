@@ -50,7 +50,7 @@ public class DBJobInfoDao
 			    + DatabaseHelper.JOB_TABLE
 			    + "('username','jobid','jobtitle','jobcontent','telnum','jobdate','confirmdate','jobreply','jobstate') VALUES(?,?,?,?,?,?,?,?,?)",
 		    new Object[] { job.getUsername(), job.getJobId(), job.getJobTitle(), job.getJobContent(),
-			    job.getTelNum(), job.getJobDate(), BaseConst.getDate2(new Date()), "完成", "O" });
+			    job.getTelNum(), job.getJobDate(), BaseConst.getDate(new Date(),2), "完成", "O" });
 	}
 	// 检测下，删除那些多余的
 	delRecord(nums);
@@ -65,7 +65,7 @@ public class DBJobInfoDao
     {
 	ContentValues cv = new ContentValues();
 	cv.put("jobreply", note);
-	cv.put("confirmdate", BaseConst.getDate2(new Date()));
+	cv.put("confirmdate", BaseConst.getDate(new Date(),2));
 	cv.put("jobstate", "O");
 	if ("取消".equals(note) && note != "")
 	{
@@ -88,7 +88,7 @@ public class DBJobInfoDao
 	{
 	    cv.put("jobreply", "取消");
 	    cv.put("jobstate", "O");
-	    cv.put("confirmdate", BaseConst.getDate2(new Date()));
+	    cv.put("confirmdate", BaseConst.getDate(new Date(),2));
 	}
 	else
 	{

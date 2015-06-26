@@ -1,5 +1,6 @@
 package com.jingu.app.main.activity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import android.app.Activity;
@@ -76,8 +77,9 @@ public class WaitingActivity extends Activity
 		NewJobActivity.nJobActivity.finish();
 		WaitingActivity.this.finish();
 		// 提交回复成功，跳转到主页面
-		Intent i = new Intent(WaitingActivity.this, MainActivityFrag.class);
-		startActivity(i);
+		// Intent i = new Intent(WaitingActivity.this,
+		// MainActivityFrag.class);
+		// startActivity(i);
 		// 提示提交成功
 		Toast.makeText(WaitingActivity.this, R.string.confirm_success, Toast.LENGTH_SHORT).show();
 		break;
@@ -126,8 +128,9 @@ public class WaitingActivity extends Activity
 		AddJobActivity.jActivity.finish();
 		WaitingActivity.this.finish();
 		// 提交回复成功，跳转到主页面
-		Intent ii = new Intent(WaitingActivity.this, MainActivityFrag.class);
-		startActivity(ii);
+		// Intent ii = new Intent(WaitingActivity.this,
+		// MainActivityFrag.class);
+		// startActivity(ii);
 		// 提示提交成功
 		Toast.makeText(WaitingActivity.this, R.string.confirm_success, Toast.LENGTH_SHORT).show();
 		break;
@@ -138,6 +141,16 @@ public class WaitingActivity extends Activity
 		WaitingActivity.this.setResult(RESULT_OK, intent5);
 		WaitingActivity.this.finish();
 		break;
+	    case 10:
+		//根据时间获取工单列表，返回工单信息
+		Intent intent6 = new Intent();
+		Bundle jobLists = new Bundle();
+		@SuppressWarnings("unchecked")
+		List<JobBean> jList = (List<JobBean>) msg.obj;
+		jobLists.putSerializable("jList", (Serializable) jList);
+		intent6.putExtras(jobLists);
+		WaitingActivity.this.setResult(2, intent6);
+		WaitingActivity.this.finish();
 	    default:
 		break;
 	    }
@@ -289,7 +302,7 @@ public class WaitingActivity extends Activity
 		@SuppressWarnings("unchecked")
 		List<ParamBean> pList = (List<ParamBean>) intent.getSerializableExtra("job");
 		JobBean job = (JobBean) intent.getSerializableExtra("job2");// 直办时候，保存一份工单到本地
-		String flag = intent.getStringExtra("flag");
+		String flag = intent.getStringExtra("flag");// 1是直办、2是派单
 		String code = intent.getStringExtra("code");
 		if (HttpClientService.postAddJobInfo(WaitingActivity.this, pList, flag, job, code))
 		{
@@ -323,6 +336,34 @@ public class WaitingActivity extends Activity
 		    // 提交成功
 		    msg.what = 9;
 		    msg.obj = bContent;
+		    mHandler.sendMessage(msg);
+		}
+		else
+		{
+		    // 请求失败
+		    msg.what = 3;
+		    mHandler.sendMessage(msg);
+		}
+	    }
+	    else if ("alljob".equals(str))
+	    {
+		// 根据时间段请求所有工单
+		Message msg = new Message();
+		// 判断当前网络是否可用，如果不可用，结束线程
+		if (!HttpClientService.isConnect(WaitingActivity.this))
+		{
+		    msg.what = 0;
+		    mHandler.sendMessage(msg);
+		    return;
+		}
+		String beginDate = intent.getStringExtra("beginDate");
+		String endDate = intent.getStringExtra("endDate");
+		List<JobBean> jList = HttpClientService.getCheckAllJob(WaitingActivity.this, beginDate,endDate);
+		if (jList != null)
+		{
+		    // 提交成功
+		    msg.what = 10;
+		    msg.obj = jList;
 		    mHandler.sendMessage(msg);
 		}
 		else

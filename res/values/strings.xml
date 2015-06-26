@@ -37,6 +37,8 @@
     <string name="default_msg_time">昨天下午</string>
     <string name="default_msg_content">南阳市东区33号...</string>
     <string name="no_msg_waring">没有新待办件，下滑刷新！</string>
+    <string name="msg_waring">点击查询按钮获取相关时间段的工单列表！</string>
+    <string name="no_job_waring">未查询到工单，请重新选择时间！</string>
     <string name="no_done_job_waring">当前没有已完成的工单！</string>
     <string name="server_setting">服务器设置</string>
     <string name="scan_setting">新工单设置</string>

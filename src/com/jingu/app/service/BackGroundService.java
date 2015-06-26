@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -22,13 +21,15 @@ import com.jingu.app.fragment.NewJobFragment;
 import com.jingu.app.main.activity.MainActivityFrag;
 import com.jingu.app.util.BaseConst;
 import com.jingu.app.util.CustomerHttpClient;
+import com.jingu.app.util.FillUtil;
+import com.jingu.app.util.MyApplication;
 import com.jingu.app.util.MyGpsServiceListener;
+import com.jingu.app.util.StaticRecevier;
 
 public class BackGroundService extends Service
 {
 
     private String TAG = "JIN_GU";
-    public static BackGroundService bService = null;
     // 线程句柄
     public static MessageThread messageThread = null;
     // 点击查看
@@ -47,6 +48,8 @@ public class BackGroundService extends Service
 
     // 电源锁
     private WakeLock wakeLock;
+    // 广播
+    public static StaticRecevier searchReceiver = null;
 
     @Override
     public IBinder onBind(Intent intent)
@@ -57,8 +60,15 @@ public class BackGroundService extends Service
     @Override
     public void onCreate()
     {
-	wakeLock = null;
+	Log.i(TAG,"in service create fun!");
+	// 设置service为前台进程
+	Notification notification = new Notification();
+	notification.flags = Notification.FLAG_ONGOING_EVENT;
+	notification.flags |= Notification.FLAG_NO_CLEAR;
+	notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
+	this.startForeground(0, notification);
 	// 获取电源锁
+	wakeLock = null;
 	acquireWakeLock();
 	super.onCreate();
     }
@@ -67,7 +77,6 @@ public class BackGroundService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-	bService = this;
 	// 初始化
 	msgTitile = getResources().getString(R.string.title_msg);
 	msgString = getResources().getString(R.string.title_new_job);
@@ -96,7 +105,6 @@ public class BackGroundService extends Service
 	// 读取系统扫描参数
 	String setScan = BaseConst.getParams(this, "scan_times");
 	sleepTime = Long.valueOf(setScan) * 1000;
-	Log.i(TAG, setScan);
 	// 开启线程
 	if (messageThread == null)
 	{
@@ -113,16 +121,20 @@ public class BackGroundService extends Service
 	    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
 	}
 	Log.i(TAG, "Back Ground Service is Stard!!");
+
 	flags = START_STICKY;
-
-	// 设置service为前台进程
-	Notification notification = new Notification();
-	notification.flags = Notification.FLAG_ONGOING_EVENT;
-	notification.flags |= Notification.FLAG_NO_CLEAR;
-	notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
-	this.startForeground(0, notification);
-
 	return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onStart(Intent intent, int startId)
+    {
+	// IntentFilter localIntentFilter = new
+	// IntentFilter("android.intent.action.USER_PRESENT");
+	// localIntentFilter.setPriority(Integer.MAX_VALUE);// 整形最大值
+	// searchReceiver = new StaticRecevier();
+	// registerReceiver(searchReceiver, localIntentFilter);
+	// super.onStart(intent, startId);
     }
 
     /**
@@ -141,14 +153,15 @@ public class BackGroundService extends Service
 	    {
 		try
 		{
+		    boolean isBack = MyApplication.getInstance().isBack();
 		    // 先判断网路
 		    if (!HttpClientService.isConnect(BackGroundService.this))
 		    {
-			if (isNet)
+			if (isNet && !isBack)
 			{
 			    isNet = false;
 			    Message msg = new Message();
-			    msg.what = 1;
+			    msg.what = 1;//显示网路状况不佳
 			    NewJobFragment.mHandler.sendMessage(msg);
 			}
 			Thread.sleep(5000);
@@ -156,7 +169,7 @@ public class BackGroundService extends Service
 		    }
 		    else
 		    {
-			if (!isNet)
+			if (!isNet && !isBack)
 			{
 			    isNet = true;
 			    Message msg1 = new Message();
@@ -166,8 +179,7 @@ public class BackGroundService extends Service
 		    }
 		    // 向服务器发送请求获取新的工单的请求，同时返回工单的个数
 		    int msgNum = HttpClientService.getRepostOfNewJob(BackGroundService.this);
-		    int isBack = getIsBackGround();
-		    if (isBack == 0)
+		    if (!isBack)
 		    {
 			// 如果是前台界面并且存在通知栏信息，那么此时清除通知栏信息
 			if (messageNotificationID > 1000)
@@ -181,9 +193,10 @@ public class BackGroundService extends Service
 			}
 		    }
 		    // 如果有新消息，并且当前应用是在后台运行，那么在通知栏显示消息
-		    if (msgNum > 0 && isBack == 1)
+		    if (msgNum > 0 && isBack)
 		    {
-			int nums = getMsgNum();
+			Log.i("JINGU", "Get new Message in back,next is show in title!");
+			int nums = MyApplication.getInstance().getMsgNums();
 			nums += msgNum;
 			// 更新通知栏
 			String textMsg = Integer.toString(nums) + msgString;
@@ -197,7 +210,7 @@ public class BackGroundService extends Service
 			messageNotificatioManager.notify(messageNotificationID, messageNotification);
 			messageNotificationID++;
 			// 更新消息个数
-			saveMsgNum(nums);
+			MyApplication.getInstance().setMsgNums(nums);
 			Log.i(TAG, textMsg);
 		    }
 		    // 休息10秒钟
@@ -217,70 +230,54 @@ public class BackGroundService extends Service
     @Override
     public void onDestroy()
     {
-	Log.i("JINGU", "Now in onDestory Service func");
-	// 清除提示栏
-	if (messageNotificationID > 0)
+	if (MyApplication.getInstance().isExit())
 	{
-	    messageNotificatioManager.cancel(messageNotificationID - 1);
+	    Log.i("JINGU", "Now in onDestory Service func");
+	    // 清楚广播
+	    // unregisterReceiver(searchReceiver);
+	    // 清除提示栏
+	    if (messageNotificationID > 0)
+	    {
+		messageNotificatioManager.cancel(messageNotificationID - 1);
+	    }
+	    // 停止线程
+	    messageThread.isRunning = false;
+	    // 停止位置服务
+	    if (locationManager != null && locationListener != null)
+	    {
+		locationManager.removeUpdates(locationListener);
+	    }
+	    // 关闭连接池
+	    if (CustomerHttpClient.mHttpClient != null)
+	    {
+		CustomerHttpClient.mHttpClient.getConnectionManager().shutdown();
+		CustomerHttpClient.mHttpClient = null;
+	    }
+	    // 取消service的前台线程
+	    this.stopForeground(true);
+	    // 释放电源锁
+	    releaseWakeLock();
+	    MainActivityFrag.instance.serviceIntent = null;
+	    // 置空线程
+	    messageThread.interrupt();// 打断当前线程
+	    messageIntent = null;
+	    super.onDestroy();
+	    Log.i(TAG, "destroy");
 	}
-	// 停止线程
-	messageThread.isRunning = false;
-	// 停止位置服务
-	if (locationManager != null && locationListener != null)
+	else
 	{
-	    locationManager.removeUpdates(locationListener);
+	    Log.i("JINGU", "Now in onDestory Service func,but it restart now !");
+	    // 更新isBack
+	    MyApplication.getInstance().setBack(true);
+	    // 如果并没有通过正常的退出方式来到这里，那么重启service
+	    Intent localIntent = new Intent();
+	    localIntent.setClass(this, BackGroundService.class);
+	    this.startService(localIntent);
+	    // 记录日志
+	    StringBuffer sql = new StringBuffer();
+	    sql.append("Restart Service beacuse it's destroy in normal way !!");
+	    FillUtil.writeLogToFile(sql.toString());
 	}
-	// 关闭连接池
-	if (CustomerHttpClient.mHttpClient != null)
-	{
-	    CustomerHttpClient.mHttpClient.getConnectionManager().shutdown();
-	    CustomerHttpClient.mHttpClient = null;
-	}
-	// 取消service的前台线程
-	stopForeground(true);
-	// 释放电源锁
-	releaseWakeLock();
-	MainActivityFrag.instance.serviceIntent = null;
-	// 置空线程
-	messageThread.interrupt();// 打断当前线程
-	messageIntent = null;
-	super.onDestroy();
-	Log.i(TAG, "destroy");
-    }
-
-    /**
-     * 1：后台运行 0：前台运行
-     * 
-     * @return
-     */
-    public int getIsBackGround()
-    {
-	SharedPreferences settings = getSharedPreferences("setting", 0);
-	return settings.getInt("isBack", 0);
-    }
-
-    /**
-     * 返回当前消息数
-     * 
-     * @return
-     */
-    public int getMsgNum()
-    {
-	SharedPreferences settings = getSharedPreferences("setting", 0);
-	return settings.getInt("nums", 0);
-    }
-
-    /**
-     * 每次更新消息数目
-     * 
-     * @param nums
-     */
-    public void saveMsgNum(int nums)
-    {
-	SharedPreferences settings = getSharedPreferences("setting", 0);
-	SharedPreferences.Editor editor = settings.edit();
-	editor.putInt("nums", nums);
-	editor.commit();
     }
 
     // 获取电源锁

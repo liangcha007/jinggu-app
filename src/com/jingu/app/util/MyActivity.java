@@ -1,7 +1,6 @@
 package com.jingu.app.util;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 
 public class MyActivity extends Activity
 {
@@ -11,7 +10,6 @@ public class MyActivity extends Activity
     {
 	// 取消注册home键
 	BaseConst.unregisterHomeKeyReceiver(this);
-	updateIsBack(1);
 	super.onPause();
     }
 
@@ -20,7 +18,6 @@ public class MyActivity extends Activity
     {
 	// 注册监听home键
 	BaseConst.registerHomeKeyReceiver(this);
-	updateIsBack(0);
 	super.onResume();
     }
 
@@ -34,19 +31,5 @@ public class MyActivity extends Activity
     protected void onDestroy()
     {
 	super.onDestroy();
-    }
-
-    /**
-     * 是否后台运行时候，修改参数，用于显示消息数目，在service中要用到
-     * 
-     * @param i
-     */
-    public void updateIsBack(int i)
-    {
-	SharedPreferences settings = getSharedPreferences("setting", 0);
-	SharedPreferences.Editor editor = settings.edit();
-	editor.putInt("isBack", i);
-	editor.putInt("nums", 0);
-	editor.commit();
     }
 }

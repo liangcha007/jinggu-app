@@ -87,19 +87,30 @@ public class BaseConst
     // public static final long minTime = 2000;// 2000ms
     // public static final float minDistance = 10;// 10m
 
+    // http://crm.jinguc.com/api/app.php?act=all_job&username=wz&password=123456&start_time=2015-06-25&end_time=2015-06-25
+
     // 监听home键的接收器
     private static MyHomeWatcherReceiver mHomeKeyReceiver = null;
 
-    public static String getDate(Date date)
+    public static String getDate(Date date, int i)
     {
-	SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
-	return sdf2.format(date);
-    }
-
-    public static String getDate2(Date date)
-    {
-	SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	return sdf1.format(date);
+	SimpleDateFormat sdf = null;
+	switch (i)
+	{
+	case 1:
+	    sdf = new SimpleDateFormat("HH:mm");
+	    break;
+	case 2:
+	    sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    break;
+	case 3:
+	    sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    break;
+	default:
+	    sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    break;
+	}
+	return sdf.format(date);
     }
 
     /**
@@ -214,23 +225,6 @@ public class BaseConst
     }
 
     /**
-     * 0:退出到后台 1:整体退出
-     * 
-     * @param i
-     */
-    public static void updateExit(Context context, int i)
-    {
-	SharedPreferences settings = context.getSharedPreferences("setting", 0);
-	SharedPreferences.Editor editor = settings.edit();
-	editor.putInt("exit", i);
-	if (i == 1)
-	{
-	    editor.putString("password", "");
-	}
-	editor.commit();
-    }
-
-    /**
      * 更新当前用户 (用户登录成功后，会更新最新的用户信息到参数中，全局参数)
      * 
      * @param context
@@ -299,7 +293,7 @@ public class BaseConst
     public static String getParams(Context context, String name)
     {
 	SharedPreferences settings = context.getSharedPreferences("setting", 0);
-	String params = settings.getString(name, "50");
+	String params = settings.getString(name, "20");
 	return params;
     }
 

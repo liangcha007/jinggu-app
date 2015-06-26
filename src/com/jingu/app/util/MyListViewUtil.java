@@ -60,6 +60,48 @@ public class MyListViewUtil
     }
 
     /**
+     * 查询的多有工单的listview分组显示的adapter
+     * 
+     * @return
+     */
+    public MyListViewAdapter getAdapterForAllJob(List<JobBean> jobList)
+    {
+	ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
+	if (jobList != null)
+	{
+	    if (jobList.size() > 0)
+	    {
+		listItem = getDoneJobListAdapter(jobList);
+		MyListViewAdapter mAdapter = new MyListViewAdapter(listItem, context);
+		return mAdapter;
+	    }
+	}
+	// 不存在已办工单
+	HashMap<String, Object> map = new HashMap<String, Object>();
+	map.put("image", context.getResources().getDrawable(R.drawable.nomsg_waring));
+	map.put("content", context.getString(R.string.no_job_waring));
+	listItem.add(map);
+	MyListViewAdapter mAdapter = new MyListViewAdapter(listItem, context);
+	return mAdapter;
+    }
+
+    /**
+     * 查询工单界面默认的Adapter
+     * 
+     * @return
+     */
+    public MyListViewAdapter getAdapterForAllJob()
+    {
+	ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
+	HashMap<String, Object> map = new HashMap<String, Object>();
+	map.put("image", context.getResources().getDrawable(R.drawable.nomsg_waring));
+	map.put("content", context.getString(R.string.msg_waring));
+	listItem.add(map);
+	MyListViewAdapter mAdapter = new MyListViewAdapter(listItem, context);
+	return mAdapter;
+    }
+
+    /**
      * 已完成工单的listview分组显示的adapter
      * 
      * @return
@@ -282,6 +324,7 @@ public class MyListViewUtil
 	return listJobBeans;
     }
 
+    // 以下旧方法，不再考虑
     /**
      * 旧方法，获取已完成工单的adapter信息 原来已经完成工单的adapter的数据获取，已经废弃，2015-3-11
      * 

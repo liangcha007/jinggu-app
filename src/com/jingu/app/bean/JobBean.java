@@ -1,6 +1,9 @@
 package com.jingu.app.bean;
 
 import java.io.Serializable;
+import java.util.Date;
+
+import com.jingu.app.util.BaseConst;
 
 public class JobBean implements Serializable
 {
@@ -61,6 +64,32 @@ public class JobBean implements Serializable
 	this.username = username;
 	this.telNum = tel;
 	this.jobDate = jobDate;
+    }
+
+    /**
+     * 根据时间段查询工单专用bean的构造函数
+     * 
+     * @param jobId
+     * @param jobTitle
+     * @param jobContent
+     * @param username
+     * @param tel
+     * @param jobDate
+     */
+    public JobBean(String jobId, String jobTitle, String jobContent, String username, String tel, String jobDate,
+	    String jobReply)
+    {
+	super();
+	this.jobId = jobId;
+	this.jobTitle = jobTitle;
+	this.jobContent = jobContent;
+	this.username = username;
+	this.telNum = tel;
+	this.jobDate = jobDate;
+	this.jobReply = jobReply;
+	this.confirmdate = BaseConst.getDate(new Date(), 2);//Check all job,just marks
+	this.jobState = "C";// Check all job,just mark
+	this.jobType="C";//Check all job,just mark
     }
 
     public int getId()

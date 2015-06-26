@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -21,14 +20,15 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jingu.app.R;
+import com.jingu.app.bean.JobBean;
 import com.jingu.app.dao.DBJobInfoDao;
 import com.jingu.app.fragment.DoneJobFragment;
 import com.jingu.app.fragment.NewJobFragment;
@@ -39,6 +39,8 @@ import com.jingu.app.service.UpdateManager;
 import com.jingu.app.util.BaseConst;
 import com.jingu.app.util.MyApplication;
 import com.jingu.app.util.MyFragmentAdapter;
+import com.jingu.app.util.MyListViewAdapter;
+import com.jingu.app.util.MyListViewUtil;
 
 public class MainActivityFrag extends FragmentActivity
 {
@@ -83,6 +85,7 @@ public class MainActivityFrag extends FragmentActivity
 	super.onCreate(arg0);
 	setContentView(R.layout.main_jingu);
 	instance = this;
+	serviceIntent = null;
 	MyApplication.getInstance().addActivity(this);
 	initHandler(arg0);
     }
@@ -125,8 +128,7 @@ public class MainActivityFrag extends FragmentActivity
 	MyFragmentAdapter fAdapter = new MyFragmentAdapter(getSupportFragmentManager(), fragmentList);
 	mViewPager.setAdapter(fAdapter);
 
-	// 开启服务
-	updateIsBack(0);
+	Log.i(TAG, "now in MainActivityFrag onCreate!!");
 	if (serviceIntent == null)
 	{
 	    serviceIntent = new Intent(getApplicationContext(), BackGroundService.class);
@@ -283,8 +285,7 @@ public class MainActivityFrag extends FragmentActivity
 		}
 		else
 		{
-		    BaseConst.updateExit(this, 0);
-		    updateIsBack(1);
+		    updateIsBack(true);
 		    // 直接返回到桌面
 		    Intent startMain = new Intent(Intent.ACTION_MAIN);
 		    startMain.addCategory(Intent.CATEGORY_HOME);
@@ -334,6 +335,7 @@ public class MainActivityFrag extends FragmentActivity
     protected void onDestroy()
     {
 	instance = null;
+	Log.i(TAG, "now in MainActivityFrag onDestroy!");
 	super.onDestroy();
     }
 
@@ -348,7 +350,6 @@ public class MainActivityFrag extends FragmentActivity
     {
 	// 取消注册home键
 	BaseConst.unregisterHomeKeyReceiver(this);
-	updateIsBack(1);
 	super.onPause();
     }
 
@@ -361,15 +362,23 @@ public class MainActivityFrag extends FragmentActivity
     @Override
     protected void onResume()
     {
+	// 注册监听home键
+	BaseConst.registerHomeKeyReceiver(this);
+	updateIsBack(false);
+	Log.i(TAG, "now in MainAcitvityFrag onResume!");
 	// 检测是否有震动，停止震动
 	if (BackGroundService.messageThread != null)
 	{
 	    BackGroundService.messageThread.interrupt();// 线程终端，同时激活线程
-	    NewJobFragment.mHandler.sendEmptyMessage(0);
 	}
-	// 注册监听home键
-	BaseConst.registerHomeKeyReceiver(this);
-	updateIsBack(0);
+	if (NewJobFragment.mHandler != null)
+	{
+	    NewJobFragment.mHandler.sendEmptyMessage(0);// 更细待办件界面
+	}
+	if (DoneJobFragment.mHandler != null)
+	{
+	    DoneJobFragment.mHandler.sendEmptyMessage(0);// 更新已办件界面
+	}
 	super.onResume();
     }
 
@@ -378,13 +387,10 @@ public class MainActivityFrag extends FragmentActivity
      * 
      * @param i
      */
-    public void updateIsBack(int i)
+    public void updateIsBack(boolean b)
     {
-	SharedPreferences settings = getSharedPreferences("setting", 0);
-	SharedPreferences.Editor editor = settings.edit();
-	editor.putInt("isBack", i);
-	editor.putInt("nums", 0);
-	editor.commit();
+	MyApplication.getInstance().setBack(b);
+	MyApplication.getInstance().setMsgNums(0);
     }
 
     /* ========FragMent中的Click========== */
@@ -394,54 +400,20 @@ public class MainActivityFrag extends FragmentActivity
     {
 	if (requestCode == 1)
 	{
+	    ListView lists = (ListView) ScanFragment.sView.findViewById(R.id.check_job_list);
+	    MyListViewUtil listViewUtil = new MyListViewUtil(this);
 	    switch (resultCode)
 	    {
-	    case RESULT_OK:
-		Bundle bundle = data.getExtras();
-		// 显示扫描到的内容
-		Intent intent = new Intent();
-		intent.setClass(MainActivityFrag.this, WaitingActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.putExtra("str", "scan");
-		intent.putExtras(bundle);
-		startActivityForResult(intent, 2);
-		break;
-	    default:
-		break;
-	    }
-	}
-	else if (requestCode == 2)
-	{
-	    // 显示钢瓶档案
-	    switch (resultCode)
-	    {
-	    case RESULT_OK:
-		Bundle bundle = data.getExtras();
-		@SuppressWarnings("static-access")
-		ImageView igView = (ImageView) scanFragment.sView.findViewById(R.id.s_image_scan);
-		igView.setVisibility(ImageView.GONE);
-		@SuppressWarnings("static-access")
-		TextView textView = (TextView) scanFragment.sView.findViewById(R.id.s_bottle_content);
-		textView.setTextSize(22);
-		textView.setText(bundle.getString("result"));
-		textView.setBackgroundResource(R.anim.sharp);
-		@SuppressWarnings("static-access")
-		LinearLayout scanBody = (LinearLayout) scanFragment.sView.findViewById(R.id.scan_body);
-		scanBody.setBackgroundResource(R.drawable.chat_bg_default);
-		@SuppressWarnings("static-access")
-		Button bscan = (Button) scanFragment.sView.findViewById(R.id.b_rep_scan);
-		bscan.setVisibility(Button.VISIBLE);
-		break;
-	    case 0:
-		// 网络出问题
-		Toast.makeText(MainActivityFrag.this, R.string.login_net_fial, Toast.LENGTH_SHORT).show();
-		break;
 	    case 1:
-		// 提交失败
-		Toast.makeText(MainActivityFrag.this, R.string.scan_fail, Toast.LENGTH_SHORT).show();
+		MyListViewAdapter myAdapter = listViewUtil.getAdapterForAllJob(null);
+		lists.setAdapter(myAdapter);
 		break;
 	    case 2:
-		// 正常返回
+		@SuppressWarnings("unchecked")
+		List<JobBean> jList = (List<JobBean>) data.getSerializableExtra("jList");
+		Log.i("JINGU", "Now in MainActivityFra onActivityResult !!");
+		MyListViewAdapter myAdapter1 = listViewUtil.getAdapterForAllJob(jList);
+		lists.setAdapter(myAdapter1);
 		break;
 	    default:
 		break;
@@ -450,15 +422,19 @@ public class MainActivityFrag extends FragmentActivity
     }
 
     /**
-     * 扫一扫
+     * 根据时间段查看工单
      * 
      * @param v
      */
-    public void beginScan(View v)
+    public void checkJob(View v)
     {
-	Intent intent = new Intent();
-	intent.setClass(MainActivityFrag.this, MipcaActivityCapture.class);
-	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	Intent intent = new Intent(this, WaitingActivity.class);
+	EditText beginDate = (EditText) ScanFragment.sView.findViewById(R.id.begin_date);
+	EditText endDate = (EditText) ScanFragment.sView.findViewById(R.id.end_date);
+
+	intent.putExtra("beginDate", beginDate.getText().toString());
+	intent.putExtra("endDate", endDate.getText().toString());
+	intent.putExtra("str", "alljob");
 	startActivityForResult(intent, 1);
     }
 
@@ -515,6 +491,7 @@ public class MainActivityFrag extends FragmentActivity
     public void SystemSetting(View v)
     {
 	Intent intent = new Intent(MainActivityFrag.this, SysSettingActivity.class);
+	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	startActivity(intent);
     }
 

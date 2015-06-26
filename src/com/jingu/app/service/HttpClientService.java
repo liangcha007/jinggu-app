@@ -63,6 +63,51 @@ public class HttpClientService
     }
 
     /**
+     * 根据时间段查询对应时间段的工单列表
+     * 
+     * @param context
+     * @param bDate
+     * @param eDate
+     * @return
+     */
+    public static List<JobBean> getCheckAllJob(Context context, String bDate, String eDate)
+    {
+	List<JobBean> liBeans = new ArrayList<JobBean>();
+	UserBean uBean = BaseConst.getUserFromApplication(context);
+	NameValuePair param1 = new BasicNameValuePair("username", uBean.getUsername());
+	NameValuePair param2 = new BasicNameValuePair("password", uBean.getPassword());
+	NameValuePair param3 = new BasicNameValuePair("start_time", bDate);
+	NameValuePair param4 = new BasicNameValuePair("end_time", eDate);
+	NameValuePair param5 = new BasicNameValuePair("act", "all_job");
+
+	try
+	{
+	    String return_str = CustomerHttpClient.post(param1, param2, param3, param4, param5);
+	    Log.i(TAG, "Send get_All_job Message!return_message is:" + return_str);
+	    if (return_str == null || "".equals(return_str)) { return null; }
+	    JSONArray arr = new JSONArray(return_str);
+	    int repostNum = arr.length();
+	    for (int i = 0; i < repostNum; i++)
+	    {
+		JSONObject temp = (JSONObject) arr.get(i);
+		JobBean job = new JobBean(temp.getString("roll_number"), temp.getString("payroll_title"),
+			temp.getString("roll_content"), uBean.getUsername(), temp.getString("company_tel"),
+			temp.getString("re_service_time_start"),temp.getString("payroll_result"));
+		liBeans.add(job);
+	    }
+	    return liBeans;
+	}
+	catch (Exception e)
+	{
+	    StringBuffer sql = new StringBuffer();
+	    sql.append("get All job error ,the error msg is:");
+	    sql.append(e.getMessage());
+	    FillUtil.writeLogToFile(sql.toString());
+	    return null;
+	}
+    }
+
+    /**
      * 请求新的工单信息 将新工单插入数据库 返回获取的工单条数
      * 
      * @return
@@ -109,7 +154,6 @@ public class HttpClientService
 		    // 将新工单插入到数据库中
 		    dInfoDao.add(job);
 		}
-
 	    }
 	    dInfoDao.closeDB();
 	}

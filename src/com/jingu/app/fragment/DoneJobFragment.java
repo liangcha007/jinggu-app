@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,12 +25,28 @@ public class DoneJobFragment extends Fragment
 {
     public static String TAG = "JinGu";
     private MyListViewUtil listViewUtil = null;
+    public static Handler mHandler = null;
     ListView jobList = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
 	MyApplication.getInstance().addActivity(this.getActivity());
+	if (mHandler == null)
+	{
+	    mHandler = new Handler()
+	    {
+		public void handleMessage(Message msg)
+		{
+		    switch (msg.what)
+		    {
+		    default:
+			jobList.setAdapter(listViewUtil.getAdapterForDoneJob());
+			break;
+		    }
+		};
+	    };
+	}
 	super.onCreate(savedInstanceState);
     }
 

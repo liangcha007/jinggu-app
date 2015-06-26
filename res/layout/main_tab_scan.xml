@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#eee"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fcfcfc"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -16,61 +16,69 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/scan"
+            android:text="工单查询"
             android:textColor="#ffffff"
             android:textSize="20sp" />
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/rl_bottom"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:gravity="center|center_vertical"
-        android:orientation="vertical" >
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/rl_body"
+        android:background="@drawable/chat_footer_bg"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal"
+        android:paddingTop="3dp" >
 
-        <LinearLayout
-            android:id="@+id/scan_body"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@drawable/beijing5"
+        <EditText
+            android:id="@+id/begin_date"
+            android:layout_width="0dp"
+            android:layout_height="33dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="8"
+            android:text="2012-4-12"
+            android:textSize="12dp"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/rl_text"
+            android:layout_width="wrap_content"
+            android:layout_height="33dp"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:text=" ~ "
+            android:textColor="#ffffff" />
 
-            <ImageView
-                android:id="@+id/s_image_scan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:clickable="true"
-                android:onClick="beginScan"
-                android:src="@drawable/scan1" />
+        <EditText
+            android:id="@+id/end_date"
+            android:layout_width="0dp"
+            android:layout_height="33dp"
+            android:layout_weight="8"
+            android:text="2012-4-12"
+            android:textSize="12dp"
+            android:gravity="center" />
 
-            <TextView
-                android:id="@+id/s_bottle_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="15dp"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:text="点我扫一扫，查看钢瓶档案!"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_weight="4"
+            android:layout_marginBottom="5dp"
+            android:background="@anim/btn_style_alert_dialog_cancel"
+            android:onClick="checkJob"
+            android:text="查询"
+            android:textColor="#ffffff" />
 
-            <Button
-                android:id="@+id/b_rep_scan"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="20dp"
-                android:background="@anim/btn_style_alert_dialog_cancel"
-                android:onClick="beginScan"
-                android:text="点击重新扫一扫"
-                android:textColor="#fff"
-                android:textSize="18sp"
-                android:visibility="invisible" />
-        </LinearLayout>
     </LinearLayout>
+
+    <ListView
+        android:id="@+id/check_job_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:divider="#00000000"
+        android:drawSelectorOnTop="false"
+        android:fadingEdge="none" />
 
 </LinearLayout>
