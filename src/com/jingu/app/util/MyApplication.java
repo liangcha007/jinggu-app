@@ -127,10 +127,10 @@ public class MyApplication extends Application
 	if (null == instance)
 	{
 	    instance = new MyApplication();
-	    instance.setHttp_url("http://crm.jinguc.com/api/app.php");
-	    instance.setHttp_update_url("http://crm.jinguc.com/app/update.xml");
-	    // instance.setHttp_url("http://219.156.138.98:8001/api/app.php");
-	    // instance.setHttp_update_url("http://219.156.138.98:8001/app/update.xml");
+	    // instance.setHttp_url("http://crm.jinguc.com/api/app.php");
+	    // instance.setHttp_update_url("http://crm.jinguc.com/app/update.xml");
+	    instance.setHttp_url("http://219.156.138.98:8001/api/app.php");
+	    instance.setHttp_update_url("http://219.156.138.98:8001/app/update.xml");
 
 	    instance.setBack(true);
 	    instance.setExit(false);

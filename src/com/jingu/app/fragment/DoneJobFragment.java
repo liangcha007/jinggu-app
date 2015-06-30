@@ -26,7 +26,7 @@ public class DoneJobFragment extends Fragment
     public static String TAG = "JinGu";
     private MyListViewUtil listViewUtil = null;
     public static Handler mHandler = null;
-    ListView jobList = null;
+    public static ListView jobList = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState)

@@ -19,8 +19,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.jingu.app.R;
 import com.jingu.app.bean.JobBean;
@@ -39,6 +41,7 @@ public class ScanFragment extends Fragment
     private EditText endDate;
     public ListView jobList = null;
     public static List<JobBean> listJobs = null;
+    public Spinner sp;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -62,7 +65,14 @@ public class ScanFragment extends Fragment
 	jobList.setAdapter(listViewUtil.getAdapterForAllJob());
 	// 点击item事件，显示工单详情
 	jobList.setOnItemClickListener(new MyItemClickListener());
-
+	// 设置Spinner
+	sp = (Spinner) scanView.findViewById(R.id.job_typestr);
+	String[] spStrs = { "全部", "未收到", "未阅读", "办理中" ,"完成","取消","直办"};
+	ArrayAdapter<String> spAaAdapter = new ArrayAdapter<String>(getActivity(),
+		android.R.layout.simple_spinner_item, spStrs);
+	spAaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	sp.setAdapter(spAaAdapter);
+	//sp.setSelection(0, true);
 	// --以下设置时间选择器
 	beginDate = (EditText) scanView.findViewById(R.id.begin_date);
 	endDate = (EditText) scanView.findViewById(R.id.end_date);
@@ -102,28 +112,6 @@ public class ScanFragment extends Fragment
 		}
 	    }
 	});
-	// beginDate.setOnClickListener(new OnClickListener()
-	// {
-	//
-	// @Override
-	// public void onClick(View v)
-	// {
-	// DateTimePickDialogUtil dateTimePicKDialog = new
-	// DateTimePickDialogUtil(getActivity(), initDate);
-	// dateTimePicKDialog.dateTimePicKDialog(beginDate);
-	// }
-	// });
-	// endDate.setOnClickListener(new OnClickListener()
-	// {
-	//
-	// @Override
-	// public void onClick(View v)
-	// {
-	// DateTimePickDialogUtil dateTimePicKDialog = new
-	// DateTimePickDialogUtil(getActivity(), initDate);
-	// dateTimePicKDialog.dateTimePicKDialog(endDate);
-	// }
-	// });
 	return scanView;
     }
 

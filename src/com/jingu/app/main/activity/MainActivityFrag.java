@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.jingu.app.R;
@@ -431,9 +432,11 @@ public class MainActivityFrag extends FragmentActivity
 	Intent intent = new Intent(this, WaitingActivity.class);
 	EditText beginDate = (EditText) ScanFragment.sView.findViewById(R.id.begin_date);
 	EditText endDate = (EditText) ScanFragment.sView.findViewById(R.id.end_date);
+	Spinner spType = (Spinner) ScanFragment.sView.findViewById(R.id.job_typestr);
 
 	intent.putExtra("beginDate", beginDate.getText().toString());
 	intent.putExtra("endDate", endDate.getText().toString());
+	intent.putExtra("typeStr", spType.getSelectedItem().toString());
 	intent.putExtra("str", "alljob");
 	startActivityForResult(intent, 1);
     }

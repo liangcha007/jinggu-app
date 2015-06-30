@@ -70,7 +70,7 @@ public class HttpClientService
      * @param eDate
      * @return
      */
-    public static List<JobBean> getCheckAllJob(Context context, String bDate, String eDate)
+    public static List<JobBean> getCheckAllJob(Context context, String bDate, String eDate, String typeStr)
     {
 	List<JobBean> liBeans = new ArrayList<JobBean>();
 	UserBean uBean = BaseConst.getUserFromApplication(context);
@@ -78,11 +78,12 @@ public class HttpClientService
 	NameValuePair param2 = new BasicNameValuePair("password", uBean.getPassword());
 	NameValuePair param3 = new BasicNameValuePair("start_time", bDate);
 	NameValuePair param4 = new BasicNameValuePair("end_time", eDate);
-	NameValuePair param5 = new BasicNameValuePair("act", "all_job");
+	NameValuePair param5 = new BasicNameValuePair("handle_status", typeStr);
+	NameValuePair param6 = new BasicNameValuePair("act", "all_job");
 
 	try
 	{
-	    String return_str = CustomerHttpClient.post(param1, param2, param3, param4, param5);
+	    String return_str = CustomerHttpClient.post(param1, param2, param3, param4, param5,param6);
 	    Log.i(TAG, "Send get_All_job Message!return_message is:" + return_str);
 	    if (return_str == null || "".equals(return_str)) { return null; }
 	    JSONArray arr = new JSONArray(return_str);
@@ -92,7 +93,7 @@ public class HttpClientService
 		JSONObject temp = (JSONObject) arr.get(i);
 		JobBean job = new JobBean(temp.getString("roll_number"), temp.getString("payroll_title"),
 			temp.getString("roll_content"), uBean.getUsername(), temp.getString("company_tel"),
-			temp.getString("re_service_time_start"),temp.getString("payroll_result"));
+			temp.getString("re_service_time_start"), temp.getString("handle_status"));
 		liBeans.add(job);
 	    }
 	    return liBeans;

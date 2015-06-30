@@ -142,7 +142,7 @@ public class WaitingActivity extends Activity
 		WaitingActivity.this.finish();
 		break;
 	    case 10:
-		//根据时间获取工单列表，返回工单信息
+		// 根据时间获取工单列表，返回工单信息
 		Intent intent6 = new Intent();
 		Bundle jobLists = new Bundle();
 		@SuppressWarnings("unchecked")
@@ -358,7 +358,9 @@ public class WaitingActivity extends Activity
 		}
 		String beginDate = intent.getStringExtra("beginDate");
 		String endDate = intent.getStringExtra("endDate");
-		List<JobBean> jList = HttpClientService.getCheckAllJob(WaitingActivity.this, beginDate,endDate);
+		String typeStr = intent.getStringExtra("typeStr");
+		List<JobBean> jList = HttpClientService.getCheckAllJob(WaitingActivity.this, beginDate, endDate,
+			typeStr);
 		if (jList != null)
 		{
 		    // 提交成功
